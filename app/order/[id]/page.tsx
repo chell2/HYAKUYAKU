@@ -22,7 +22,15 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
         setOrder(data);
       } catch (err: unknown) {
         console.error('Error fetching order:', err);
-        setError(err.message);
+        let errorMessage = 'An unknown error occurred.';
+        if (err instanceof Error) {
+          errorMessage = err.message;
+        } else if (typeof err === 'string') {
+          errorMessage = err;
+        } else {
+          errorMessage = JSON.stringify(err);
+        }
+        setError(errorMessage);
       }
     };
     if (params.id) {
@@ -50,7 +58,15 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
       setDescriptions((prev) => ({ ...prev, [product.id]: data.text }));
     } catch (err: unknown) {
       console.error('Error generating description:', err);
-      setError(err.message);
+      let errorMessage = 'An unknown error occurred.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      } else {
+        errorMessage = JSON.stringify(err);
+      }
+      setError(errorMessage);
     }
   };
 

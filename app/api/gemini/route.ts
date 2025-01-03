@@ -50,7 +50,6 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error('Gemini API error:', error);
     let errorMessage: string;
-
     if (error instanceof Error) {
       errorMessage = error.message;
     } else if (typeof error === 'string') {
