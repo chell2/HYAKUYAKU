@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ text: result.response.text() });
   } catch (error: unknown) {
     console.error('Gemini API error:', error);
-    let errorMessage = 'An unknown error occurred.';
+    let errorMessage: string;
 
     if (error instanceof Error) {
       errorMessage = error.message;
@@ -65,6 +65,8 @@ export async function POST(req: NextRequest) {
       } else {
         errorMessage = JSON.stringify(error);
       }
+    } else {
+      errorMessage = 'An unknown error occurred.';
     }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
