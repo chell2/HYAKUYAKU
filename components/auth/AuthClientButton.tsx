@@ -4,7 +4,7 @@ import {
   createClientComponentClient,
   Session,
 } from '@supabase/auth-helpers-nextjs';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const AuthClientButton = ({ session }: { session: Session | null }) => {
   const router = useRouter();

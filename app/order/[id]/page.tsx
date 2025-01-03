@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils/dateUtils';
 import { DeliveryWithItems, ProductWithBrewery } from '@/types/types';
 
@@ -11,7 +10,6 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
     [productId: string]: string;
   }>({});
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -22,7 +20,7 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
         }
         const data = await response.json();
         setOrder(data);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching order:', err);
         setError(err.message);
       }
@@ -50,7 +48,7 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
       }
       const data = await res.json();
       setDescriptions((prev) => ({ ...prev, [product.id]: data.text }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error generating description:', err);
       setError(err.message);
     }
