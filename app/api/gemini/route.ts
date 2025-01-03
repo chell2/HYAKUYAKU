@@ -49,6 +49,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ text: result.response.text() });
   } catch (error: unknown) {
     console.error('Gemini API error:', error);
+    let errorMessage = 'An unknown error occurred.';
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    } else if (error && typeof error === 'object') {
+      if ('message' in error) {
+        errorMessage = (error as { message: string }).message;
+      } else if ('error' in error) {
+        errorMessage = (error as { error: string }).error;
+      } else if (Array.isArray(error) && error[0] && 'message' in error[0]) {
+        errorMessage = (error as Array<{ message: string }>)[0].message;
+      } else {
+        errorMessage = JSON.stringify(error);
+      }
+    }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
