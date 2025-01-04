@@ -18,7 +18,7 @@ interface Beer {
   volume: number | null;
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const supabase = createServerComponentClient<Database>({ cookies });
     const { data: beerlist, error } = await supabase
