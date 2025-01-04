@@ -1,7 +1,4 @@
-'use client';
-
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { formatDate } from '@/lib/utils/dateUtils';
 
 interface Client {
@@ -43,12 +40,7 @@ const clientTypeMap: { [key: string]: string } = {
 };
 
 const OrderCard: React.FC<Props> = ({ data }: Props) => {
-  const [imgSrc, setImgSrc] = useState<string>(`/noimage.png`);
-  useEffect(() => {
-    if (data.client?.id) {
-      setImgSrc(`/${data.client.id}.png`);
-    }
-  }, [data.client?.id]);
+  const imgSrc = data.client?.id ? `/${data.client.id}.png` : '/noimage.png';
 
   return (
     <div className="card lg:card-side bg-base-100 shadow-xl">
@@ -56,7 +48,9 @@ const OrderCard: React.FC<Props> = ({ data }: Props) => {
         <img
           src={imgSrc}
           alt={data.client?.name || 'No Name'}
-          onError={() => setImgSrc('/noimage.png')}
+          onError={() => {
+            console.error('Error loading image:', imgSrc);
+          }}
         />
       </figure>
       <div className="card-body">
