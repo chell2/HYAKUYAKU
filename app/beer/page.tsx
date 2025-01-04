@@ -6,8 +6,36 @@ import { Database } from '@/types/supabase';
 const supabase = createServerComponentClient<Database>({ cookies });
 
 const getAllBeer = async () => {
-  const { data: beerlist } = await supabase.from('products').select('*');
-  return beerlist;
+  try {
+    const { data: beerlist, error } = await supabase
+      .from('products')
+      .select('*');
+    if (error) {
+      console.error('Error fetching beers:', error);
+      throw new Error(`Error fetching beers: ${error.message}`);
+    }
+    return beerlist;
+  } catch (error: unknown) {
+    console.error('Error fetching beers:', error);
+    let errorMessage = 'An unknown error occurred.';
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    } else if (error && typeof error === 'object') {
+      if ('message' in error) {
+        errorMessage = (error as { message: string }).message;
+      } else if ('error' in error) {
+        errorMessage = (error as { error: string }).error;
+      } else if (Array.isArray(error) && error[0] && 'message' in error[0]) {
+        errorMessage = (error as Array<{ message: string }>)[0].message;
+      } else {
+        errorMessage = JSON.stringify(error);
+      }
+    }
+    throw new Error(`Error fetching beers: ${errorMessage}`);
+  }
 };
 
 export default async function BeerList() {
