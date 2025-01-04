@@ -1,8 +1,4 @@
-'use client';
-
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 interface Data {
   id: string | number;
@@ -16,20 +12,9 @@ interface Props {
 }
 
 const Card: React.FC<Props> = ({ data }) => {
-  const pathname = usePathname();
-  const [imgSrc, setImgSrc] = useState<string>(`/placeholder.png`);
-  useEffect(() => {
-    if (data.id) {
-      setImgSrc(`/${data.id}.png`);
-    }
-  }, [data.id]);
+  const imgSrc = data.image ?? `/placeholder.png`;
 
   const getLinkHref = () => {
-    if (pathname.includes('/brewery')) {
-      return `/brewery/${data.id}`;
-    } else if (pathname.includes('/beer')) {
-      return `/beer/${data.id}`;
-    }
     return `/${data.id}`;
   };
 
@@ -39,7 +24,9 @@ const Card: React.FC<Props> = ({ data }) => {
         <img
           src={imgSrc}
           alt={data.name || 'No Name'}
-          onError={() => setImgSrc('/placeholder.png')}
+          onError={() => {
+            console.error('Error loading image:', imgSrc);
+          }}
         />
       </figure>
       <div className="card-body prose">
