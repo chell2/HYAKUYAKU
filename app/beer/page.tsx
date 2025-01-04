@@ -1,11 +1,11 @@
 'use client';
 
 import Card from '@/components/Card';
-import { Products } from '@/types/types';
+import { Product } from '@/types/types';
 import { useState, useEffect } from 'react';
 
 export default function BeerList() {
-  const [beerlist, setBeerlist] = useState<Products[]>([]);
+  const [beerlist, setBeerlist] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +16,7 @@ export default function BeerList() {
         if (!res.ok) {
           throw new Error(`Failed to fetch products: ${res.status}`);
         }
-        const data: Products[] = await res.json();
+        const data: Product[] = await res.json();
         setBeerlist(data);
       } catch (error: any) {
         setError(error.message);

@@ -2,10 +2,10 @@
 
 import BreweryCard from '@/components/BreweryCard';
 import { useEffect, useState } from 'react';
-import { Breweries } from '@/types/types';
+import { Brewery } from '@/types/types';
 
 export default function BreweryList() {
-  const [breweries, setBreweries] = useState<Breweries[]>([]);
+  const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +16,7 @@ export default function BreweryList() {
         if (!res.ok) {
           throw new Error(`Failed to fetch breweries: ${res.status}`);
         }
-        const data: Breweries[] = await res.json();
+        const data: Brewery[] = await res.json();
         setBreweries(data);
       } catch (error: any) {
         setError(error.message);
