@@ -18,9 +18,9 @@ export default function BreweryList() {
         }
         const data: Brewery[] = await res.json();
         setBreweries(data);
-      } catch (error: any) {
-        setError(error.message);
-        console.error('Error fetching breweries:', error);
+      } catch (err: unknown) {
+        console.error('Error fetching breweries:', err);
+        setError('注文情報の取得に失敗しました。');
       } finally {
         setLoading(false);
       }

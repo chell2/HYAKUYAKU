@@ -18,9 +18,9 @@ export default function BeerList() {
         }
         const data: Product[] = await res.json();
         setBeerlist(data);
-      } catch (error: any) {
-        setError(error.message);
-        console.error('Error fetching products:', error);
+      } catch (err: unknown) {
+        console.error('Error fetching products:', err);
+        setError('注文情報の取得に失敗しました。');
       } finally {
         setLoading(false);
       }
