@@ -12,14 +12,16 @@ interface Props {
 }
 
 const Card: React.FC<Props> = ({ data }) => {
+
   return (
     <div className="card bg-base-100 w-64 shadow-xl">
       <figure className="w-auto">
         <img
           src={`/${data.id}.png`}
           alt={data.name || 'No Name'}
-          onError={() => {
-            console.error('Error loading image:', `/placeholder.png`);
+          onError={(e: any) => {
+            console.error('Error loading image:', e);
+            e.target.src = '/placeholder.png';
           }}
         />
       </figure>
