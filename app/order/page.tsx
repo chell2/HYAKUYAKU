@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import OrderCard from '@/components/OrderCard';
 import { OrderWithItems } from '@/types/types';
+import { useEffect, useState } from 'react';
 
 export default function OrderList() {
   const [orders, setOrders] = useState<OrderWithItems[]>([]);

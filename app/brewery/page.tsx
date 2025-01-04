@@ -1,8 +1,8 @@
 'use client';
 
 import BreweryCard from '@/components/BreweryCard';
-import { useEffect, useState } from 'react';
 import { Brewery } from '@/types/types';
+import { useEffect, useState } from 'react';
 
 export default function BreweryList() {
   const [breweries, setBreweries] = useState<Brewery[]>([]);
