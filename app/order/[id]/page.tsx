@@ -14,7 +14,7 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`/api/orders/${params.id}`);
+        const response = await fetch(`/api/order/${params.id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch order: ${response.status}`);
         }

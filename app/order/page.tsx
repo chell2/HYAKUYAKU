@@ -12,7 +12,7 @@ export default function OrderList() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('/api/orders');
+        const response = await fetch('/api/order');
         if (!response.ok) {
           throw new Error(`Failed to fetch orders: ${response.status}`);
         }
