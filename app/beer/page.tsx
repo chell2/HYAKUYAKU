@@ -16,7 +16,7 @@ interface Beer {
 }
 
 export default async function BeerList() {
-  const res = await fetch('/api/beers');
+  const res = await fetch('/api/beer');
   if (!res.ok) {
     console.error('Error fetching beers:', res.status);
     return <p>エラーが発生しました。</p>;
