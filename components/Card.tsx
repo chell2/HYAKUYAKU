@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { Product } from '@/types/types';
+import { Products } from '@/types/types';
 
 interface Props {
-  data: Product;
+  data: Products;
 }
 
 const Card: React.FC<Props> = ({ data }) => {
