@@ -12,9 +12,13 @@ const Card: React.FC<Props> = ({ data }) => {
         <img
           src={`/${data.id}.png`}
           alt={data.name || 'No Name'}
-          onError={(e: any) => {
-            console.error('Error loading image:', e);
-            e.target.src = '/placeholder.png';
+          onError={(
+            e: React.SyntheticEvent<HTMLImageElement> & {
+              currentTarget: HTMLImageElement;
+            }
+          ) => {
+            console.error('Error loading image:', `/${data.id}.png`, e);
+            e.currentTarget.src = '/placeholder.png';
           }}
         />
       </figure>

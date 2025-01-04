@@ -12,9 +12,13 @@ const BreweryCard: React.FC<Props> = ({ data }) => {
         <img
           src={`/${data.id}.png`}
           alt={data.name || 'No Name'}
-          onError={(e: any) => {
-            console.error('Error loading image:', e);
-            e.target.src = '/noimage.png';
+          onError={(
+            e: React.SyntheticEvent<HTMLImageElement> & {
+              currentTarget: HTMLImageElement;
+            }
+          ) => {
+            console.error('Error loading image:', `/${data.id}.png`, e);
+            e.currentTarget.src = '/noimage.png';
           }}
         />
       </figure>
