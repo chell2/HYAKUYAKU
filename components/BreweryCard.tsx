@@ -1,14 +1,8 @@
 import Link from 'next/link';
-
-interface Data {
-  id: string | number;
-  name: string | null;
-  description: string | null;
-  image?: string | null;
-}
+import { Breweries } from '@/types/types';
 
 interface Props {
-  data: Data;
+  data: Breweries;
 }
 
 const BreweryCard: React.FC<Props> = ({ data }) => {

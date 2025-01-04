@@ -1,18 +1,11 @@
 import Link from 'next/link';
-
-interface Data {
-  id: string | number;
-  name: string | null;
-  description: string | null;
-  image?: string | null;
-}
+import { Product } from '@/types/types';
 
 interface Props {
-  data: Data;
+  data: Product;
 }
 
 const Card: React.FC<Props> = ({ data }) => {
-
   return (
     <div className="card bg-base-100 w-64 shadow-xl">
       <figure className="w-auto">
