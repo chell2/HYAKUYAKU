@@ -1,43 +1,10 @@
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils/dateUtils';
-
-interface Client {
-  id: string | null;
-  name: string | null;
-  type: string | null;
-}
-
-interface Product {
-  name: string | null;
-  brewery: {
-    name: string | null;
-  } | null;
-  id: string;
-}
-
-interface OrderItem {
-  quantity: number | null;
-  product: Product | null;
-}
-
-interface Data {
-  id: string;
-  client: Client | null;
-  order_date: string | null;
-  order_items: OrderItem[];
-}
+import { clientTypeMap, OrderWithItems } from '@/types/types';
 
 interface Props {
-  data: Data;
+  data: OrderWithItems;
 }
-
-const clientTypeMap: { [key: string]: string } = {
-  hair_salon: '美容室',
-  nail_salon: 'ネイルサロン',
-  restaurant: '飲食店',
-  liquor_store: '酒屋',
-  realtor: '不動産会社',
-};
 
 const OrderCard: React.FC<Props> = ({ data }: Props) => {
   const imgSrc = data.client?.id ? `/${data.client.id}.png` : '/noimage.png';
