@@ -12,20 +12,14 @@ interface Props {
 }
 
 const Card: React.FC<Props> = ({ data }) => {
-  const imgSrc = data.image ?? `/placeholder.png`;
-
-  const getLinkHref = () => {
-    return `/${data.id}`;
-  };
-
   return (
     <div className="card bg-base-100 w-64 shadow-xl">
       <figure className="w-auto">
         <img
-          src={imgSrc}
+          src={`/${data.id}.png`}
           alt={data.name || 'No Name'}
           onError={() => {
-            console.error('Error loading image:', imgSrc);
+            console.error('Error loading image:', `/placeholder.png`);
           }}
         />
       </figure>
@@ -35,7 +29,7 @@ const Card: React.FC<Props> = ({ data }) => {
           {data.description || 'No description available'}
         </p>
         <div className="card-actions justify-end">
-          <Link href={getLinkHref()} key={data.id}>
+          <Link href={`/beer/${data.id}`} key={data.id}>
             <button className="btn btn-primary">View Details</button>
           </Link>
         </div>
