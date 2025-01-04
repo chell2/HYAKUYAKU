@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { formatDate } from '@/lib/utils/dateUtils';
-import { DeliveryWithItems, ProductWithBrewery } from '@/types/types';
+import { OrderWithItems, ProductWithBrewery } from '@/types/types';
 
 const OrderDetailPage = ({ params }: { params: { id: string } }) => {
-  const [order, setOrder] = useState<DeliveryWithItems | null>(null);
+  const [order, setOrder] = useState<OrderWithItems | null>(null);
   const [descriptions, setDescriptions] = useState<{
     [productId: string]: string;
   }>({});

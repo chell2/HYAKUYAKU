@@ -1,19 +1,5 @@
 import Card from '@/components/Card';
-
-interface Beer {
-  abv: string | null;
-  brewery_id: string | null;
-  created_at: string;
-  description: string | null;
-  fermentation: string | null;
-  hops: string[] | null;
-  ibu: number | null;
-  id: string;
-  malts: string[] | null;
-  name: string | null;
-  style: string | null;
-  volume: number | null;
-}
+import { Product } from '@/types/types';
 
 export default async function BeerList() {
   const res = await fetch('/api/beer');
@@ -21,7 +7,7 @@ export default async function BeerList() {
     console.error('Error fetching beers:', res.status);
     return <p>エラーが発生しました。</p>;
   }
-  const beerlist = (await res.json()) as Beer[];
+  const beerlist: Product[] = await res.json();
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
