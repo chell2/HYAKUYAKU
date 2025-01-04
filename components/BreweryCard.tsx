@@ -18,7 +18,7 @@ const BreweryCard: React.FC<Props> = ({ data }) => {
         <img
           src={`/${data.id}.png`}
           alt={data.name || 'No Name'}
-          onError={(e) => {
+          onError={(e: any) => {
             console.error('Error loading image:', e);
             e.target.src = '/noimage.png';
           }}
