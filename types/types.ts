@@ -13,3 +13,5 @@ export type OrderWithItems = Database['public']['Tables']['orders']['Row'] & {
 };
 
 export type Product = Database['public']['Tables']['products']['Row'];
+
+export type Breweries = Database['public']['Tables']['breweries']['Row'];
