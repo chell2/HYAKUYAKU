@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const maltList = productWithBrewery.malts?.join(', ') || '不明';
 
     const prompt = `
-      以下の商品について、${clientType} 向けの魅力的な説明文を生成してください。
+      以下の商品について、${clientType} への来店客向けの魅力的な説明文を生成してください。
 
       商品名: ${productWithBrewery.name}
       ブルワリー名: ${breweryName}
