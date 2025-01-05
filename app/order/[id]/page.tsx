@@ -7,6 +7,7 @@ import {
   ProductWithBrewery,
 } from '@/types/types';
 import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 const OrderDetailPage = ({ params }: { params: { id: string } }) => {
   const [order, setOrder] = useState<OrderWithItems | null>(null);
@@ -124,7 +125,9 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
                           </button>
                         )}
                         {descriptions[item.product?.id || ''] && (
-                          <p>{descriptions[item.product?.id || '']}</p>
+                          <ReactMarkdown>
+                            {descriptions[item.product?.id || '']}
+                          </ReactMarkdown>
                         )}
                       </div>
                     </div>
