@@ -1,4 +1,4 @@
-import { Database } from '@/types/supabase';
+import { ProductWithBrewery } from '@/types/types';
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
@@ -11,11 +11,6 @@ export async function POST(req: NextRequest) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = await genAI.getGenerativeModel({ model: 'gemini-pro' });
-
-    type ProductWithBrewery =
-      Database['public']['Tables']['products']['Row'] & {
-        brewery: Database['public']['Tables']['breweries']['Row'] | null;
-      };
 
     const { product, clientType } = await req.json();
     if (!product || !clientType) {

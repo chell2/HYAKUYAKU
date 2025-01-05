@@ -1,8 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { formatDate } from '@/lib/utils/dateUtils';
-import { OrderWithItems, ProductWithBrewery } from '@/types/types';
+import {
+  clientTypeMap,
+  OrderWithItems,
+  ProductWithBrewery,
+} from '@/types/types';
+import { useEffect, useState } from 'react';
 
 const OrderDetailPage = ({ params }: { params: { id: string } }) => {
   const [order, setOrder] = useState<OrderWithItems | null>(null);
@@ -41,6 +45,8 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
   const generateDescription = async (product: ProductWithBrewery) => {
     if (descriptions[product.id]) return;
     try {
+      const clientType = order?.client?.type;
+      const clientTypeName = clientType ? clientTypeMap[clientType] : 'その他';
       const res = await fetch('/api/gemini', {
         method: 'POST',
         headers: {
@@ -48,7 +54,7 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
         },
         body: JSON.stringify({
           product,
-          clientType: order?.client?.type || 'unknown',
+          clientType: clientTypeName,
         }),
       });
       if (!res.ok) {
