@@ -24,3 +24,16 @@ export const clientTypeMap: { [key: string]: string } = {
   liquor_store: '酒屋',
   realtor: '不動産会社',
 };
+
+export type ProductFormData = {
+  name: string;
+  description: string;
+  abv: string | null;
+  ibu: number | null;
+  volume: number | null;
+  style: string | null;
+  fermentation: string | null;
+  hops: string | null;
+  malts: string | null;
+  brewery_id: string;
+};

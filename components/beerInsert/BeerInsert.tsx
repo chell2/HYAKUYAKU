@@ -1,21 +1,21 @@
 'use client';
 
-import type { Brewery } from '@/types/types';
+import type { Brewery, ProductFormData } from '@/types/types';
 import { useEffect, useState } from 'react';
 import { insertProductData } from './insertProductData';
 import { getBreweries } from './getBreweries';
 
 const BeerInsert = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
-    abv: '',
-    ibu: '',
-    volume: '',
-    style: '',
-    fermentation: '',
-    hops: '',
-    malts: '',
+    abv: null,
+    ibu: null,
+    volume: null,
+    style: null,
+    fermentation: null,
+    hops: null,
+    malts: null,
     brewery_id: '',
   });
   const [breweries, setBreweries] = useState<Brewery[]>([]);
@@ -69,17 +69,21 @@ const BeerInsert = () => {
       setFormData({
         name: '',
         description: '',
-        abv: '',
-        ibu: '',
-        volume: '',
-        style: '',
-        fermentation: '',
-        hops: '',
-        malts: '',
+        abv: null,
+        ibu: null,
+        volume: null,
+        style: null,
+        fermentation: null,
+        hops: null,
+        malts: null,
         brewery_id: '',
       });
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
       console.error('Error submitting form:', error);
     }
   };
@@ -133,6 +137,7 @@ const BeerInsert = () => {
               name="brewery_id"
               value={formData.brewery_id}
               onChange={handleChange}
+              required
             >
               <option value="">選択してください</option>
               {breweries.map((brewery) => (
@@ -149,7 +154,7 @@ const BeerInsert = () => {
             <input
               type="text"
               name="style"
-              value={formData.style}
+              value={formData.style || ''}
               onChange={handleChange}
               className="input input-bordered w-full max-w-xs"
             />
@@ -161,7 +166,7 @@ const BeerInsert = () => {
             <select
               className="select select-bordered w-full max-w-xs"
               name="fermentation"
-              value={formData.fermentation}
+              value={formData.fermentation || ''}
               onChange={handleChange}
             >
               <option value="">選択してください</option>
@@ -177,7 +182,7 @@ const BeerInsert = () => {
             <input
               type="number"
               name="volume"
-              value={formData.volume}
+              value={formData.volume || ''}
               onChange={handleChange}
               className="input input-bordered w-full max-w-xs"
             />
@@ -189,7 +194,7 @@ const BeerInsert = () => {
             <input
               type="text"
               name="abv"
-              value={formData.abv}
+              value={formData.abv || ''}
               onChange={handleChange}
               className="input input-bordered w-full max-w-xs"
             />
@@ -201,7 +206,7 @@ const BeerInsert = () => {
             <input
               type="number"
               name="ibu"
-              value={formData.ibu}
+              value={formData.ibu || ''}
               onChange={handleChange}
               className="input input-bordered w-full max-w-xs"
             />
@@ -213,7 +218,7 @@ const BeerInsert = () => {
             <input
               type="text"
               name="hops"
-              value={formData.hops}
+              value={formData.hops ? formData.hops.split('、') : ''}
               onChange={handleChange}
               className="input input-bordered w-full max-w-xs"
             />
@@ -225,7 +230,7 @@ const BeerInsert = () => {
             <input
               type="text"
               name="malts"
-              value={formData.malts}
+              value={formData.malts ? formData.malts.split('、') : ''}
               onChange={handleChange}
               className="input input-bordered w-full max-w-xs"
             />
