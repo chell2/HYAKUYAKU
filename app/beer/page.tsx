@@ -1,7 +1,7 @@
 'use client';
 
 import Card from '@/components/Card';
-import BeerInsert from '@/components/beerInsert/BeerInsert';
+import BeerInsert from '@/components/BeerInsert';
 import { openModal } from '@/lib/utils/openModal';
 import { closeModal } from '@/lib/utils/closeModal';
 import { Product } from '@/types/types';

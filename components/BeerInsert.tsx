@@ -2,8 +2,8 @@
 
 import type { Brewery, ProductFormData } from '@/types/types';
 import { useEffect, useState } from 'react';
-import { insertProductData } from '../../lib/utils/insertProductData';
-import { getBreweriesData } from '../../lib/utils/getBreweriesData';
+import { insertProductData } from '../lib/utils/insertProductData';
+import { getBreweriesData } from '../lib/utils/getBreweriesData';
 
 const BeerInsert = () => {
   const [formData, setFormData] = useState<ProductFormData>({
