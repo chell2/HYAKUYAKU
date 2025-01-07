@@ -1,6 +1,9 @@
 'use client';
 
 import Card from '@/components/Card';
+import BeerInsert from '@/components/beerInsert/BeerInsert';
+import { openModal } from '@/lib/utils/openModal';
+import { closeModal } from '@/lib/utils/closeModal';
 import { Product } from '@/types/types';
 import { useState, useEffect } from 'react';
 
@@ -42,10 +45,30 @@ export default function BeerList() {
       <div className="prose">
         <h1>Beer List</h1>
       </div>
-      <main className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {beerlist.map((beer) => (
-          <Card key={beer.id} data={beer} />
-        ))}
+      <main>
+        <div className="flex justify-end pb-10">
+          <button className="btn" onClick={openModal}>
+            商品を追加する
+          </button>
+        </div>
+        <dialog id="my_modal" className="modal">
+          <div className="modal-box w-11/12 max-w-5xl">
+            <button
+              className="btn btn-md btn-circle btn-ghost absolute right-2 top-2"
+              onClick={closeModal}
+            >
+              ✕
+            </button>
+            <p className="grid justify-items-center py-4">
+              <BeerInsert />
+            </p>
+          </div>
+        </dialog>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {beerlist.map((beer) => (
+            <Card key={beer.id} data={beer} />
+          ))}
+        </div>
       </main>
     </div>
   );
