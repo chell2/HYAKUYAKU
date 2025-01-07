@@ -2,8 +2,8 @@
 
 import type { Brewery, ProductFormData } from '@/types/types';
 import { useEffect, useState } from 'react';
-import { insertProductData } from './insertProductData';
-import { getBreweries } from './getBreweries';
+import { insertProductData } from '../../lib/utils/insertProductData';
+import { getBreweriesData } from '../../lib/utils/getBreweriesData';
 
 const BeerInsert = () => {
   const [formData, setFormData] = useState<ProductFormData>({
@@ -25,7 +25,7 @@ const BeerInsert = () => {
   useEffect(() => {
     const fetchBreweries = async () => {
       try {
-        const data = await getBreweries();
+        const data = await getBreweriesData();
         setBreweries(data);
       } catch (error) {
         console.error('Error fetching breweries:', error);

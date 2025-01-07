@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { PiUserCircle } from 'react-icons/pi';
 import MenuList from './MenuList';
-import AuthServerButton from './auth/AuthServerButton';
+import AuthServerButton from '../lib/auth/AuthServerButton';
 
 export default function Header() {
   return (
