@@ -37,3 +37,9 @@ export type ProductFormData = {
   malts: string | null;
   brewery_id: string;
 };
+
+export type BreweryFormData = {
+  name: string;
+  region: string;
+  description: string;
+};
