@@ -16,7 +16,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       const { data, error, status } = await supabase
         .from('profile')
         .select(`name, role`)
-        .eq('id', user?.id)
+        .eq('id', user?.id ?? '')
         .single();
 
       if (error && status !== 406) {
