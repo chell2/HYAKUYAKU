@@ -1,23 +1,29 @@
+'use client';
+
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils/dateUtils';
 import { clientTypeMap, OrderWithItems } from '@/types/types';
+import { useState } from 'react';
 
 interface Props {
   data: OrderWithItems;
 }
 
 const OrderCard: React.FC<Props> = ({ data }: Props) => {
-  const imgSrc = data.client?.id ? `/${data.client.id}.png` : '/noimage.png';
+  const [imgSrc, setImgSrc] = useState(
+    data.client?.id ? `/${data.client.id}.png` : '/noimage.png'
+  );
+  const handleImageError = () => {
+    setImgSrc('/noimage.png');
+  };
 
   return (
     <div className="card lg:card-side bg-base-100 shadow-xl">
-      <figure className="w-80">
+      <figure className="w-auto">
         <img
           src={imgSrc}
           alt={data.client?.name || 'No Name'}
-          onError={() => {
-            console.error('Error loading image:', imgSrc);
-          }}
+          onError={handleImageError}
         />
       </figure>
       <div className="card-body">
