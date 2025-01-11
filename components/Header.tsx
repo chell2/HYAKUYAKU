@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { PiUserCircle } from 'react-icons/pi';
 import MenuList from './MenuList';
-import AuthServerButton from '../lib/auth/AuthServerButton';
+import SignOutButton from './SignOutButton';
 
 export default function Header() {
   return (
@@ -62,7 +62,7 @@ export default function Header() {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
             <li>
-              <Link href={'/beer'} className="justify-between">
+              <Link href={'/profile'} className="justify-between">
                 Profile
                 <span className="badge">New</span>
               </Link>
@@ -71,7 +71,7 @@ export default function Header() {
               <Link href={'/settings'}>Settings</Link>
             </li>
             <li>
-              <AuthServerButton />
+              <SignOutButton />
             </li>
           </ul>
         </div>

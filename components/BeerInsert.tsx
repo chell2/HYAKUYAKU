@@ -3,7 +3,7 @@
 import type { Brewery, ProductFormData } from '@/types/types';
 import { useEffect, useState } from 'react';
 import { insertProductData } from '../lib/utils/insertProductData';
-import { getBreweriesData } from '../lib/utils/getBreweriesData';
+// import { getBreweriesData } from '../lib/utils/getBreweriesData';
 
 const BeerInsert = () => {
   const [formData, setFormData] = useState<ProductFormData>({
@@ -22,11 +22,29 @@ const BeerInsert = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // useEffect(() => {
+  //   const fetchBreweries = async () => {
+  //     try {
+  //       const data = await getBreweriesData();
+  //       setBreweries(data);
+  //     } catch (error) {
+  //       console.error('Error fetching breweries:', error);
+  //       setError('ブルワリーのデータ取得に失敗しました。');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchBreweries();
+  // }, []);
+
   useEffect(() => {
     const fetchBreweries = async () => {
       try {
-        const data = await getBreweriesData();
-        setBreweries(data);
+        const response = await fetch('/api/brewery');
+        if (!response.ok) throw new Error('Failed to fetch breweries');
+        const breweries = await response.json();
+        console.log('Breweries:', breweries);
+        setBreweries(breweries);
       } catch (error) {
         console.error('Error fetching breweries:', error);
         setError('ブルワリーのデータ取得に失敗しました。');
