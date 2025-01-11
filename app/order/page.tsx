@@ -12,7 +12,7 @@ const getAllOrder = async () => {
   const { data: orderlist } = await supabase
     .from('orders')
     .select(
-      '*, client:clients(*), order_items(quantity, product:products(*, brewery:breweries(*)))'
+      '*, client:clients(*), order_items(created_at, id, order_id, product_id, quantity, product:products(*, brewery:breweries(*)))'
     )
     .order('order_date', { ascending: false });
   return orderlist;
