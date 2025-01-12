@@ -8,7 +8,7 @@ interface Props {
 const Card: React.FC<Props> = ({ data }) => {
   return (
     <div className="card bg-base-100 w-64 shadow-xl">
-      <figure className="w-auto">
+      <figure className="w-auto aspect-square">
         <img
           src={`/${data.id}.png`}
           alt={data.name || 'No Name'}
@@ -29,7 +29,7 @@ const Card: React.FC<Props> = ({ data }) => {
         </p>
         <div className="card-actions justify-end">
           <Link href={`/beer/${data.id}`} key={data.id}>
-            <button className="btn btn-primary">View Details</button>
+            <button className="btn btn-primary">詳細を見る</button>
           </Link>
         </div>
       </div>

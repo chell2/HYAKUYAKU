@@ -82,64 +82,72 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="grid gap-4 items-center justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div className="prose">
-        <main>
-          <div className="justify-items-center">
-            <div className="w-80">
-              <img
-                src={`/${order.client?.id || 'noimage'}.png`}
-                alt={order.client?.name || 'No Name'}
-              />
+      <main>
+        <div className="w-full text-center mb-8 py-4">
+          <div className="stats shadow">
+            <div className="stat">
+              <div className="w-32 rounded">
+                <img
+                  src={`/${order.client?.id || 'noimage'}.png`}
+                  alt={order.client?.name || 'No Name'}
+                />
+              </div>
             </div>
-            <h1>{order.client?.name || 'No Name'}</h1>
-            <h3>注文日：{formatDate(order?.order_date ?? '')}</h3>
+            <div className="stat">
+              <div className="stat-figure text-primary"></div>
+              <div className="stat-title"></div>
+              <div className="stat-value text-primary">
+                {order.client?.name || 'No Name'}
+              </div>
+              <div className="stat-desc">
+                注文日：{formatDate(order?.order_date ?? '')}
+              </div>
+            </div>
           </div>
-          {order?.order_items.length > 0 ? (
-            <div className="flex flex-wrap gap-6">
-              {order.order_items.map((item, index) => (
-                <div key={index} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-                  <div className="card bg-base-100 w-full shadow-xl">
-                    <figure>
-                      <img
-                        src={`/${item.product?.id || 'placeholder'}.png`}
-                        alt={item.product?.name || 'No Name'}
-                      />
-                    </figure>
-                    <div className="card-body">
-                      <h2 className="card-title">{item.product?.name}</h2>
-                      <p>
-                        {item.quantity} x {item.product?.name} (
-                        {item.product?.brewery?.name})
-                      </p>
-                      <div className="card-actions justify-end">
-                        {!descriptions[item.product?.id || ''] && (
-                          <button
-                            className="btn btn-primary"
-                            onClick={() =>
-                              generateDescription(
-                                item.product as ProductWithBrewery
-                              )
-                            }
-                          >
-                            説明文を生成
-                          </button>
-                        )}
-                        {descriptions[item.product?.id || ''] && (
-                          <ReactMarkdown>
-                            {descriptions[item.product?.id || '']}
-                          </ReactMarkdown>
-                        )}
-                      </div>
-                    </div>
+        </div>
+        {order?.order_items.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {order.order_items.map((item, index) => (
+              <div key={index} className="card bg-base-100 shadow-xl">
+                <figure className="w-auto">
+                  <img
+                    src={`/${item.product?.id || 'placeholder'}.png`}
+                    alt={item.product?.name || 'No Name'}
+                  />
+                </figure>
+                <div className="card-body">
+                  <h2 className="card-title">{item.product?.name}</h2>
+                  {/* <p>
+                    {item.quantity} x {item.product?.name} (
+                    {item.product?.brewery?.name})
+                  </p> */}
+                  <div className="card-actions justify-end">
+                    {!descriptions[item.product?.id || ''] && (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() =>
+                          generateDescription(
+                            item.product as ProductWithBrewery
+                          )
+                        }
+                      >
+                        説明文を生成
+                      </button>
+                    )}
+                    {descriptions[item.product?.id || ''] && (
+                      <ReactMarkdown>
+                        {descriptions[item.product?.id || '']}
+                      </ReactMarkdown>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p>注文がありません。</p>
-          )}
-        </main>
-      </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>注文がありません。</p>
+        )}
+      </main>
     </div>
   );
 };

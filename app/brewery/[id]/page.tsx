@@ -5,7 +5,6 @@ import {
 import { cookies } from 'next/headers';
 import { Database } from '@/types/supabase';
 import React from 'react';
-import Image from 'next/image';
 
 const getDetailBrewery = async (
   id: string,
@@ -24,18 +23,29 @@ const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
   const brewery = await getDetailBrewery(params.id, supabase);
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div className="prose">
-        <h1>{brewery?.name}</h1>
-      </div>
+    <div className="grid gap-4 justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main>
-        <Image
-          src="/noimage.png"
-          alt={brewery?.name || 'No Name'}
-          width={300}
-          height={100}
-        />
-        <p>{brewery?.description}</p>
+        <div className="w-full text-center mb-8 py-4">
+          <div className="stats shadow">
+            <div className="stat">
+              <div className="w-32 rounded">
+                <img
+                  src={`/${brewery?.id}.png`}
+                  alt={brewery?.name || 'No Name'}
+                />
+              </div>
+            </div>
+            <div className="stat">
+              <div className="stat-figure text-primary"></div>
+              <div className="stat-title"></div>
+              <div className="stat-value text-primary">{brewery?.name}</div>
+              <div className="stat-desc">地域：{brewery?.region}</div>
+            </div>
+          </div>
+        </div>
+        <div className="prose">
+          <p>{brewery?.description}</p>
+        </div>
       </main>
     </div>
   );

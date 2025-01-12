@@ -19,7 +19,7 @@ const OrderCard: React.FC<Props> = ({ data }: Props) => {
 
   return (
     <div className="card lg:card-side bg-base-100 shadow-xl">
-      <figure className="w-auto">
+      <figure className="w-56">
         <img
           src={imgSrc}
           alt={data.client?.name || 'No Name'}
