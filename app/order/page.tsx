@@ -1,12 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
-
-// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-// import { cookies } from 'next/headers';
 import OrderCard from '@/components/OrderCard';
-// import { Database } from '@/types/supabase';
 
-// const supabase = createServerComponentClient<Database>({ cookies });
 export default async function OrderList() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
@@ -23,7 +18,6 @@ export default async function OrderList() {
       .order('order_date', { ascending: false });
     return orderlist;
   };
-
   const orderlist = await getAllOrder();
 
   return (
