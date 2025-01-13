@@ -8,7 +8,7 @@ export default function LoginPage() {
           <form className="card-body">
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">メールアドレス</span>
               </label>
               <input
                 id="email"
@@ -21,7 +21,7 @@ export default function LoginPage() {
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">パスワード</span>
               </label>
               <input
                 id="password"
@@ -32,7 +32,10 @@ export default function LoginPage() {
                 required
               />
               <label className="label">
-                <a href="#" className="label-text-alt link link-hover">
+                <a
+                  href="/reset-password"
+                  className="label-text-alt link link-hover"
+                >
                   パスワードを忘れた方
                 </a>
               </label>
