@@ -38,12 +38,12 @@ export default function LoginPage() {
               </label>
             </div>
             <div className="form-control mt-2">
-              <button className="btn btn-primary" formAction={login}>
+              <button className="btn btn-secondary" formAction={login}>
                 ログイン
               </button>
             </div>
             <div className="form-control mt-2">
-              <button className="btn btn-secondary" formAction={signup}>
+              <button className="btn btn-primary" formAction={signup}>
                 新規登録
               </button>
             </div>
