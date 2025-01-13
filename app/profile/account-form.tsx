@@ -74,7 +74,7 @@ export default function AccountForm({ user }: { user: User | null }) {
             <div className="card-body">
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Email</span>
+                  <span className="label-text">メールアドレス</span>
                 </label>
                 <input
                   id="email"
@@ -87,7 +87,7 @@ export default function AccountForm({ user }: { user: User | null }) {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Name</span>
+                  <span className="label-text">ユーザーネーム</span>
                 </label>
                 <input
                   id="name"
@@ -100,7 +100,7 @@ export default function AccountForm({ user }: { user: User | null }) {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Role</span>
+                  <span className="label-text">アカウント種別</span>
                 </label>
                 <input
                   id="role"
@@ -111,18 +111,20 @@ export default function AccountForm({ user }: { user: User | null }) {
                   onChange={(e) => setRole(e.target.value)}
                 />
               </div>
-              <div className="form-control mt-2">
+              <div className="form-control mt-4">
                 <button
                   className="btn btn-primary"
                   onClick={() => updateProfile({ name, role })}
                   disabled={loading}
                 >
-                  {loading ? 'Loading ...' : '更新'}
+                  {loading ? 'Loading ...' : '更　新'}
                 </button>
               </div>
               <form action="/auth/signout" method="post">
                 <div className="form-control mt-2">
-                  <button className="btn btn-secondary">ログアウト</button>
+                  <button className="btn btn-outline btn-secondary">
+                    ログアウト
+                  </button>
                 </div>
               </form>
             </div>
