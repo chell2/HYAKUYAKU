@@ -1,11 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import BeerInsert from './BeerInsert';
 import { openModal } from '@/lib/utils/openModal';
 import { closeModal } from '@/lib/utils/closeModal';
 
-export const ModalButton = () => {
+interface ModalButtonProps {
+  buttonTitle: string;
+  children: React.ReactNode;
+}
+
+export const ModalButton: React.FC<ModalButtonProps> = ({
+  buttonTitle,
+  children,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -22,7 +29,7 @@ export const ModalButton = () => {
     <>
       <div className="flex justify-end pb-10">
         <button className="btn" onClick={handleOpenModal}>
-          商品を追加する
+          {buttonTitle}
         </button>
       </div>
       {isModalOpen && (
@@ -34,9 +41,7 @@ export const ModalButton = () => {
             >
               ✕
             </button>
-            <p className="grid justify-items-center py-4">
-              <BeerInsert />
-            </p>
+            <p className="grid justify-items-center py-4">{children}</p>
           </div>
         </dialog>
       )}

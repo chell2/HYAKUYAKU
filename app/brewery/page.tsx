@@ -1,9 +1,10 @@
 'use client';
 
-import BreweryInsert from '@/components/BreweriyInsert';
 import BreweryCard from '@/components/BreweryCard';
-import { closeModal } from '@/lib/utils/closeModal';
-import { openModal } from '@/lib/utils/openModal';
+import BreweryInsert from '@/components/BreweriyInsert';
+import { ModalButton } from '@/components/ModalButton';
+// import { closeModal } from '@/lib/utils/closeModal';
+// import { openModal } from '@/lib/utils/openModal';
 import { Brewery } from '@/types/types';
 import { useEffect, useState } from 'react';
 
@@ -23,7 +24,7 @@ export default function BreweryList() {
         setBreweries(data);
       } catch (err: unknown) {
         console.error('Error fetching breweries:', err);
-        setError('注文情報の取得に失敗しました。');
+        setError('ブルワリー情報の取得に失敗しました。');
       } finally {
         setLoading(false);
       }
@@ -46,8 +47,12 @@ export default function BreweryList() {
         <h1>Brewery List</h1>
       </div>
       <main>
-        <div className="flex justify-end pb-10">
-          <button className="btn" onClick={openModal}>
+        <ModalButton
+          buttonTitle={'ブルワリーを追加する'}
+          children={<BreweryInsert />}
+        />
+        {/* <div className="flex justify-end pb-10">
+          <button className="btn btn-accent" onClick={openModal}>
             ブルワリーを追加する
           </button>
         </div>
@@ -63,7 +68,7 @@ export default function BreweryList() {
               <BreweryInsert />
             </p>
           </div>
-        </dialog>
+        </dialog> */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {breweries?.map((brewery) => (
             <BreweryCard key={brewery.id} data={brewery} />
