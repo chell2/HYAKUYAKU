@@ -38,10 +38,14 @@ export default function UpdatePasswordPage() {
       setMessage('パスワードが更新されました。');
       await supabase.auth.signOut();
       redirect('/login');
-    } catch (error: any) {
-      console.error(error);
-      setError(error.message || 'エラーが発生しました。');
-    }
+      } catch (error: unknown) {
+        console.error(error);
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('予期しないエラーが発生しました。');
+        }
+      }
   };
 
   return (
