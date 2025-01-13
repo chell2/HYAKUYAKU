@@ -10,12 +10,12 @@ export const ModalButton = () => {
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
-    openModal(); // openModal関数を実行
+    openModal();
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    closeModal(); // closeModal関数を実行
+    closeModal();
   };
 
   return (
@@ -25,7 +25,6 @@ export const ModalButton = () => {
           商品を追加する
         </button>
       </div>
-      {/* モーダルを条件付きでレンダリング */}
       {isModalOpen && (
         <dialog id="my_modal" className="modal">
           <div className="modal-box w-11/12 max-w-5xl">
