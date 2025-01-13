@@ -47,28 +47,9 @@ export default function BreweryList() {
         <h1>Brewery List</h1>
       </div>
       <main>
-        <ModalButton
-          buttonTitle={'ブルワリーを追加する'}
-          children={<BreweryInsert />}
-        />
-        {/* <div className="flex justify-end pb-10">
-          <button className="btn btn-accent" onClick={openModal}>
-            ブルワリーを追加する
-          </button>
-        </div>
-        <dialog id="my_modal" className="modal">
-          <div className="modal-box">
-            <button
-              className="btn btn-md btn-circle btn-ghost absolute right-2 top-2"
-              onClick={closeModal}
-            >
-              ✕
-            </button>
-            <p className="grid justify-items-center py-4">
-              <BreweryInsert />
-            </p>
-          </div>
-        </dialog> */}
+        <ModalButton buttonTitle="ブルワリーを追加する">
+          <BreweryInsert />
+        </ModalButton>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {breweries?.map((brewery) => (
             <BreweryCard key={brewery.id} data={brewery} />

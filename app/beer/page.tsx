@@ -45,7 +45,9 @@ export default function BeerList() {
         <h1>Beer List</h1>
       </div>
       <main>
-        <ModalButton buttonTitle={'商品を追加する'} children={<BeerInsert />} />
+        <ModalButton buttonTitle="商品を追加する">
+          <BeerInsert />
+        </ModalButton>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {beerlist.map((beer) => (
             <Card key={beer.id} data={beer} />
