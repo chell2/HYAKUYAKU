@@ -67,47 +67,68 @@ export default function AccountForm({ user }: { user: User | null }) {
   }
 
   return (
-    <div className="form-widget">
-      <div>
-        <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={user?.email} disabled />
+    <>
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="max-w-md w-full">
+          <div className="card bg-base-100 w-full shadow-2xl">
+            <div className="card-body">
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="text"
+                  value={user?.email}
+                  className="input input-bordered"
+                  disabled
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Name</span>
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={name || ''}
+                  className="input input-bordered"
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Role</span>
+                </label>
+                <input
+                  id="role"
+                  name="role"
+                  type="text"
+                  value={role || ''}
+                  className="input input-bordered"
+                  onChange={(e) => setRole(e.target.value)}
+                />
+              </div>
+              <div className="form-control mt-2">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => updateProfile({ name, role })}
+                  disabled={loading}
+                >
+                  {loading ? 'Loading ...' : '更新'}
+                </button>
+              </div>
+              <form action="/auth/signout" method="post">
+                <div className="form-control mt-2">
+                  <button className="btn btn-secondary">ログアウト</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <label htmlFor="name">Name</label>
-        <input
-          id="name"
-          type="text"
-          value={name || ''}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="role">Role</label>
-        <input
-          id="role"
-          type="text"
-          value={role || ''}
-          onChange={(e) => setRole(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <button
-          className="button primary block"
-          onClick={() => updateProfile({ name, role })}
-          disabled={loading}
-        >
-          {loading ? 'Loading ...' : 'Update'}
-        </button>
-      </div>
-
-      <div>
-        <form action="/auth/signout" method="post">
-          <button className="button block" type="submit">
-            Sign out
-          </button>
-        </form>
-      </div>
-    </div>
+    </>
   );
 }
