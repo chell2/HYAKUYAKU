@@ -8,7 +8,7 @@ export default function ResetPasswordPage() {
   const supabase = createClient();
 
   const resetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // フォームのデフォルトの送信動作を防止
+    e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
 
@@ -18,20 +18,17 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const res = await supabase.auth.resetPasswordForEmail(email!, {
-        redirectTo: `${location.origin}/update-password`,
-      });
-      if (res.error) {
-        throw res.error;
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) {
+        throw error;
       }
       setIsSent(true);
     } catch (error) {
       console.error(error);
       setHasError(true);
-      return;
     }
-    setIsSent(true);
   };
+
 
   return (
     <form
