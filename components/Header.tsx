@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { PiUserCircle } from 'react-icons/pi';
 import MenuList from './MenuList';
-import SignOutButton from './SignOutButton';
 
 export default function Header() {
   return (
@@ -63,15 +62,13 @@ export default function Header() {
           >
             <li>
               <Link href={'/profile'} className="justify-between">
-                Profile
-                <span className="badge">New</span>
+                設定
               </Link>
             </li>
             <li>
-              <Link href={'/settings'}>Settings</Link>
-            </li>
-            <li>
-              <SignOutButton />
+              <form action="/auth/signout" method="post">
+                <button>ログアウト</button>
+              </form>
             </li>
           </ul>
         </div>
