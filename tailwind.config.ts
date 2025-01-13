@@ -22,5 +22,8 @@ const config: Config = {
     },
   },
   plugins: [daisyui, typography],
+  daisyui: {
+    themes: ['light', 'dark', 'cupcake', 'fantasy', 'winter'],
+  },
 };
 export default config;
