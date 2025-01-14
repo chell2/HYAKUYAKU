@@ -95,28 +95,42 @@ export const resetPasswordAction = async (formData: FormData) => {
 
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
+  const access_token = formData.get('access_token') as string;
 
   if (!password || !confirmPassword) {
-    encodedRedirect(
-      'error',
-      '/reset-password',
-      'Password and confirm password are required'
-    );
+    return { type: 'error', message: '全ての項目を入力してください。' };
   }
 
   if (password !== confirmPassword) {
-    encodedRedirect('error', '/reset-password', 'Passwords do not match');
+    encodedRedirect('error', '/reset-password', 'パスワードが一致しません。');
   }
 
-  const { error } = await supabase.auth.updateUser({
+  const { error: sessionError } = await supabase.auth.setSession({
+    access_token,
+    refresh_token: '',
+  });
+
+  if (sessionError) {
+    encodedRedirect(
+      'error',
+      '/reset-password',
+      'セッションの設定に失敗しました。'
+    );
+  }
+
+  const { error: updateError } = await supabase.auth.updateUser({
     password: password,
   });
 
-  if (error) {
-    encodedRedirect('error', '/reset-password', 'Password update failed');
+  if (updateError) {
+    encodedRedirect(
+      'error',
+      '/reset-password',
+      'パスワードの更新に失敗しました: ${updateError.message}'
+    );
   }
 
-  encodedRedirect('success', '/reset-password', 'Password updated');
+  encodedRedirect('success', '/reset-password', 'パスワードを更新しました');
 };
 
 // export const signOutAction = async () => {
