@@ -1,51 +1,35 @@
-'use client';
-import { createClient } from '@/lib/utils/supabase/client';
-import { useState } from 'react';
+import { resetPasswordAction } from '@/app/actions';
+import { FormMessage, Message } from '@/components/form-message';
+import { SubmitButton } from '@/components/submit-button';
 
-export default function ResetPasswordPage() {
-  const [hasError, setHasError] = useState(false);
-  const [isSent, setIsSent] = useState(false);
-  const supabase = createClient();
-
-  const resetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-
-    if (!email) {
-      setHasError(true);
-      return;
-    }
-
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
-      if (error) {
-        throw error;
-      }
-      setIsSent(true);
-    } catch (error) {
-      console.error(error);
-      setHasError(true);
-    }
-  };
-
-
+export default async function ResetPassword(props: {
+  searchParams: Promise<Message>;
+}) {
+  const searchParams = await props.searchParams;
   return (
-    <form
-      onSubmit={resetPassword}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-        alignItems: 'center',
-        padding: '32px',
-      }}
-    >
-      <div>パスワード変更</div>
-      <input type="email" placeholder="email" name="email" />
-      <button type="submit">パスワード変更</button>
-      {hasError && <div>エラーが発生しました。</div>}
-      {isSent && <div>メールを送信しました。</div>}
+    <form className="flex flex-col w-full max-w-md p-4 gap-2 [&>input]:mb-4">
+      <h1 className="text-2xl font-medium">Reset password</h1>
+      <p className="text-sm text-foreground/60">
+        Please enter your new password below.
+      </p>
+      <label htmlFor="password">New password</label>
+      <input
+        type="password"
+        name="password"
+        placeholder="New password"
+        required
+      />
+      <label htmlFor="confirmPassword">Confirm password</label>
+      <input
+        type="password"
+        name="confirmPassword"
+        placeholder="Confirm password"
+        required
+      />
+      <SubmitButton formAction={resetPasswordAction}>
+        Reset password
+      </SubmitButton>
+      <FormMessage message={searchParams} />
     </form>
   );
 }

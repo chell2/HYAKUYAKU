@@ -33,7 +33,7 @@ export default function LoginPage() {
               />
               <label className="label">
                 <a
-                  href="/reset-password"
+                  href="/forgot-password"
                   className="label-text-alt link link-hover"
                 >
                   パスワードを忘れた方
