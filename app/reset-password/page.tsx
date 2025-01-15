@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { resetPasswordAction } from '@/app/actions';
 import { FormMessage, Message } from '@/components/form-message';
 import { SubmitButton } from '@/components/submit-button';
@@ -6,20 +5,18 @@ import { SubmitButton } from '@/components/submit-button';
 export default async function ResetPassword(props: {
   searchParams: Promise<Message>;
 }) {
-  const [pending, setPending] = useState(false);
   const searchParams = await props.searchParams;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    try {
-      setPending(true);
-      await resetPasswordAction(formData);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setPending(false);
+    const result = await resetPasswordAction(formData);
+
+    if (result?.type === 'error') {
+      alert(result.message);
+    } else if (result?.type === 'success') {
+      alert(result.message);
     }
   };
 
@@ -46,7 +43,7 @@ export default async function ResetPassword(props: {
         placeholder="Confirm password"
         required
       />
-      <SubmitButton pending={pending}>Reset password</SubmitButton>
+      <SubmitButton>Reset password</SubmitButton>
       <FormMessage message={searchParams} />
     </form>
   );
