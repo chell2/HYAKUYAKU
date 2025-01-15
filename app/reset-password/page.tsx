@@ -1,34 +1,34 @@
 import { resetPasswordAction } from '@/app/actions';
-import { FormMessage, Message } from '@/components/form-message';
+import { FormMessage } from '@/components/form-message';
 import { SubmitButton } from '@/components/submit-button';
 
-export default async function ResetPassword(props: {
-  searchParams: Promise<Message>;
+export default async function ResetPassword({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
 }) {
-  const searchParams = await props.searchParams;
+  const token_hash = searchParams.token_hash;
+    console.log('searchParams:', searchParams);
+    console.log('token_hash:', token_hash);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+  const message = searchParams.message
+    ? { message: searchParams.message }
+    : undefined;
 
-    const result = await resetPasswordAction(formData);
-
-    if (result?.type === 'error') {
-      alert(result.message);
-    } else if (result?.type === 'success') {
-      alert(result.message);
-    }
-  };
+  if (!token_hash) {
+    return <p>Invalid or missing token. Please check your reset link.</p>;
+  }
 
   return (
     <form
       className="flex flex-col w-full max-w-md p-4 gap-2 [&>input]:mb-4"
-      onSubmit={handleSubmit}
+      action={resetPasswordAction}
     >
       <h1 className="text-2xl font-medium">Reset password</h1>
       <p className="text-sm text-foreground/60">
         Please enter your new password below.
       </p>
+      <input type="hidden" name="access_token" value={token_hash} />
       <label htmlFor="password">New password</label>
       <input
         type="password"
@@ -44,7 +44,7 @@ export default async function ResetPassword(props: {
         required
       />
       <SubmitButton>Reset password</SubmitButton>
-      <FormMessage message={searchParams} />
+      {message && <FormMessage message={message} />}
     </form>
   );
 }

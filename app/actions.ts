@@ -95,26 +95,43 @@ export const resetPasswordAction = async (formData: FormData) => {
 
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
-  const access_token = formData.get('access_token') as string;
+  const token_hash = formData.get('access_token') as string;
+  console.log('password:', password);
+  console.log('confirmPassword:', confirmPassword);
+  console.log('token_hash:', token_hash);
 
-  if (!password || !confirmPassword) {
-    return { type: 'error', message: '全ての項目を入力してください。' };
+  if (
+    typeof password !== 'string' ||
+    typeof confirmPassword !== 'string' ||
+    typeof token_hash !== 'string'
+  ) {
+    return encodedRedirect(
+      'error',
+      '/reset-password',
+      '全ての項目を入力してください。'
+    );
   }
 
   if (password !== confirmPassword) {
-    encodedRedirect('error', '/reset-password', 'パスワードが一致しません。');
+    return encodedRedirect(
+      'error',
+      '/reset-password',
+      'パスワードが一致しません。'
+    );
   }
 
   const { error: sessionError } = await supabase.auth.setSession({
-    access_token,
+    access_token: token_hash,
     refresh_token: '',
   });
+  console.log('supabase.auth.setSession:', supabase.auth.setSession);
 
   if (sessionError) {
-    encodedRedirect(
+    console.error('Session error:', sessionError.message, sessionError);
+    return encodedRedirect(
       'error',
       '/reset-password',
-      'セッションの設定に失敗しました。'
+      `セッションの設定に失敗しました。${sessionError.message}`
     );
   }
 
@@ -122,15 +139,21 @@ export const resetPasswordAction = async (formData: FormData) => {
     password: password,
   });
 
+  console.log('supabase.auth.updateUser:', supabase.auth.updateUser);
+  
   if (updateError) {
-    encodedRedirect(
+    return encodedRedirect(
       'error',
       '/reset-password',
-      'パスワードの更新に失敗しました: ${updateError.message}'
+      `パスワードの更新に失敗しました: ${updateError.message}`
     );
   }
 
-  encodedRedirect('success', '/reset-password', 'パスワードを更新しました');
+  return encodedRedirect(
+    'success',
+    '/reset-password',
+    'パスワードを更新しました'
+  );
 };
 
 // export const signOutAction = async () => {
