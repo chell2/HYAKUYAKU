@@ -95,20 +95,20 @@ export const resetPasswordAction = async (formData: FormData) => {
 
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
-  const token_hash = formData.get('access_token') as string;
-  console.log('password:', password);
-  console.log('confirmPassword:', confirmPassword);
-  console.log('token_hash:', token_hash);
+  const token_hash = formData.get('token_hash') as string;
+  const email = formData.get('email') as string;
 
-  if (
-    typeof password !== 'string' ||
-    typeof confirmPassword !== 'string' ||
-    typeof token_hash !== 'string'
-  ) {
+  console.log('Received token_hash:', token_hash);
+  console.log('Received email:', email);
+
+  if (!token_hash || !email) {
+    console.error('Missing token_hash or email in the request.');
     return encodedRedirect(
       'error',
       '/reset-password',
-      '全ての項目を入力してください。'
+      'トークンまたはメールアドレスが不足しています。',
+      token_hash,
+      email
     );
   }
 
@@ -116,44 +116,73 @@ export const resetPasswordAction = async (formData: FormData) => {
     return encodedRedirect(
       'error',
       '/reset-password',
-      'パスワードが一致しません。'
+      'パスワードが一致しません。',
+      token_hash,
+      email
     );
   }
 
-  const { error: sessionError } = await supabase.auth.setSession({
-    access_token: token_hash,
-    refresh_token: '',
-  });
-  console.log('supabase.auth.setSession:', supabase.auth.setSession);
+  // **トークンを検証してセッションを取得する**
+  const { data: verifyData, error: verifyError } =
+    await supabase.auth.verifyOtp({
+      type: 'recovery',
+      token: token_hash,
+      email: email,
+    });
 
-  if (sessionError) {
-    console.error('Session error:', sessionError.message, sessionError);
+  if (verifyError) {
+    console.error('Failed to verify token:', verifyError.message);
     return encodedRedirect(
       'error',
       '/reset-password',
-      `セッションの設定に失敗しました。${sessionError.message}`
+      `トークンの検証に失敗しました: ${verifyError.message}`,
+      token_hash,
+      email
     );
   }
 
+  console.log('Token verified successfully:', verifyData);
+
+  // **セッションを設定する**
+  const { data: sessionData, error: sessionError } =
+    await supabase.auth.setSession({
+      access_token: verifyData?.session?.access_token || '',
+      refresh_token: verifyData?.session?.refresh_token || '',
+    });
+
+  if (sessionError) {
+    console.error('Failed to set session:', sessionError.message);
+    return encodedRedirect(
+      'error',
+      '/reset-password',
+      `セッションの設定に失敗しました: ${sessionError.message}`,
+      token_hash,
+      email
+    );
+  }
+
+  console.log('Session set successfully:', sessionData);
+
+  // **パスワードを更新する**
   const { error: updateError } = await supabase.auth.updateUser({
     password: password,
   });
 
-  console.log('supabase.auth.updateUser:', supabase.auth.updateUser);
-  
   if (updateError) {
+    console.error('Failed to update password:', updateError.message);
     return encodedRedirect(
       'error',
       '/reset-password',
-      `パスワードの更新に失敗しました: ${updateError.message}`
+      `パスワードの更新に失敗しました: ${updateError.message}`,
+      token_hash,
+      email
     );
   }
 
-  return encodedRedirect(
-    'success',
-    '/reset-password',
-    'パスワードを更新しました'
-  );
+  console.log('Password updated successfully.');
+
+  // **成功時のリダイレクト**
+  return encodedRedirect('success', '/login', 'パスワードを更新しました');
 };
 
 // export const signOutAction = async () => {

@@ -7,10 +7,18 @@ import { redirect } from 'next/navigation';
  * @param {string} message - The message to be encoded and added as a query parameter.
  * @returns {never} This function doesn't return as it triggers a redirect.
  */
+
 export function encodedRedirect(
   type: 'error' | 'success',
   path: string,
-  message: string
+  message: string,
+  token_hash?: string,
+  email?: string
 ) {
-  return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
+  let redirectUrl = `${path}?${type}=${encodeURIComponent(message)}`;
+  if (token_hash)
+    redirectUrl += `&token_hash=${encodeURIComponent(token_hash)}`;
+  if (email) redirectUrl += `&email=${encodeURIComponent(email)}`;
+  console.log('Redirecting to:', redirectUrl); // デバッグ用
+  return redirect(redirectUrl);
 }
