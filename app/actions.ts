@@ -63,7 +63,11 @@ export const forgotPasswordAction = async (formData: FormData) => {
   const callbackUrl = formData.get('callbackUrl')?.toString();
 
   if (!email) {
-    return encodedRedirect('error', '/forgot-password', 'Email is required');
+    return encodedRedirect(
+      'error',
+      '/forgot-password',
+      'メールアドレスを入力してください'
+    );
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -75,7 +79,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
     return encodedRedirect(
       'error',
       '/forgot-password',
-      'Could not reset password'
+      'メールを送信できませんでした'
     );
   }
 
@@ -86,7 +90,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
   return encodedRedirect(
     'success',
     '/forgot-password',
-    'Check your email for a link to reset your password.'
+    'パスワード再設定用のメールを送信しました'
   );
 };
 
@@ -97,15 +101,19 @@ export const resetPasswordAction = async (formData: FormData) => {
   const confirmPassword = formData.get('confirmPassword') as string;
 
   if (!password || !confirmPassword) {
-    encodedRedirect(
+    return encodedRedirect(
       'error',
       '/reset-password',
-      'Password and confirm password are required'
+      '新しいパスワードを2回入力してください'
     );
   }
 
   if (password !== confirmPassword) {
-    encodedRedirect('error', '/reset-password', 'Passwords do not match');
+    return encodedRedirect(
+      'error',
+      '/reset-password',
+      '入力内容が一致しません. ご確認ください'
+    );
   }
 
   const { error } = await supabase.auth.updateUser({
@@ -113,10 +121,14 @@ export const resetPasswordAction = async (formData: FormData) => {
   });
 
   if (error) {
-    encodedRedirect('error', '/reset-password', 'Password update failed');
+    return encodedRedirect(
+      'error',
+      '/reset-password',
+      'パスワードの再設定に失敗しました'
+    );
   }
 
-  encodedRedirect('success', '/reset-password', 'Password updated');
+  return encodedRedirect('success', '/', 'パスワードを再設定しました');
 };
 
 
