@@ -1,5 +1,6 @@
 'use client';
 
+import Loading from '@/app/loading';
 import { formatDate } from '@/lib/utils/dateUtils';
 import {
   clientTypeMap,
@@ -78,7 +79,7 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
   };
 
   if (error) return <p className="text-red-500">エラー: {error}</p>;
-  if (!order) return <p>読み込み中...</p>;
+  if (!order) return <Loading />;
 
   return (
     <div className="grid gap-4 items-center justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">

@@ -6,6 +6,7 @@ import { ModalButton } from '@/components/ModalButton';
 import { Brewery } from '@/types/types';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/utils/supabase/client';
+import Loading from '../loading';
 
 const supabase = createClient();
 
@@ -46,7 +47,7 @@ export default function BreweryListPage() {
   }, []);
 
   if (loading) {
-    return <p>読み込み中...</p>;
+    return <Loading />;
   }
 
   if (error) {
