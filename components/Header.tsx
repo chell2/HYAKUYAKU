@@ -67,7 +67,7 @@ export default function Header() {
             </li>
             <li>
               <form action="/auth/signout" method="post">
-                <button>ログアウト</button>
+                <button className="text-left w-40">ログアウト</button>
               </form>
             </li>
           </ul>
