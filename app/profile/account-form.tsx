@@ -117,7 +117,7 @@ export default function AccountForm({ user }: { user: User | null }) {
                   onClick={() => updateProfile({ name, role })}
                   disabled={loading}
                 >
-                  {loading ? 'Loading ...' : '更　新'}
+                  {loading ? '送信中 ...' : '更　新'}
                 </button>
               </div>
               <form action="/auth/signout" method="post">

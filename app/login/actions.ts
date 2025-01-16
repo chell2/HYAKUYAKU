@@ -2,14 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-
 import { createClient } from '@/lib/utils/supabase/server';
+import { encodedRedirect } from '@/lib/utils/encodedRedirect';
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -18,7 +16,8 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    redirect('/error');
+    console.error(error.message);
+    return encodedRedirect('error', '/login', 'ログインに失敗しました');
   }
 
   revalidatePath('/', 'layout');
@@ -28,8 +27,6 @@ export async function login(formData: FormData) {
 export async function signup(formData: FormData) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -38,7 +35,8 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
-    redirect('/error');
+    console.error(error.message);
+    return encodedRedirect('error', '/login', 'ログインに失敗しました');
   }
 
   revalidatePath('/', 'layout');

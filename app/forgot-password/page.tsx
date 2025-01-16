@@ -25,7 +25,7 @@ export default async function ForgotPassword(props: {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="例）mail@example.com"
                 className="input input-bordered"
                 required
               />
@@ -37,7 +37,7 @@ export default async function ForgotPassword(props: {
             </div>
             <div className="form-control mt-2">
               <SubmitButton formAction={forgotPasswordAction}>
-                メールを送信
+                送　信
               </SubmitButton>
               <FormMessage message={searchParams} />
             </div>
