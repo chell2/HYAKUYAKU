@@ -5,11 +5,25 @@ import BeerInsert from '@/components/BeerInsert';
 import { ModalButton } from '@/components/ModalButton';
 import { Product } from '@/types/types';
 import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/utils/supabase/client';
 
-export default function BeerList() {
+const supabase = createClient();
+
+export default function BeerListPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [beerlist, setBeerlist] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+    };
+    checkSession();
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -45,9 +59,11 @@ export default function BeerList() {
         <h1>Beer List</h1>
       </div>
       <main>
-        <ModalButton buttonTitle="商品を追加する">
-          <BeerInsert />
-        </ModalButton>
+        {isLoggedIn && (
+          <ModalButton buttonTitle="商品を追加する">
+            <BeerInsert />
+          </ModalButton>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {beerlist.map((beer) => (
             <Card key={beer.id} data={beer} />

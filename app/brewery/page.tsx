@@ -3,15 +3,27 @@
 import BreweryCard from '@/components/BreweryCard';
 import BreweryInsert from '@/components/BreweriyInsert';
 import { ModalButton } from '@/components/ModalButton';
-// import { closeModal } from '@/lib/utils/closeModal';
-// import { openModal } from '@/lib/utils/openModal';
 import { Brewery } from '@/types/types';
 import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/utils/supabase/client';
 
-export default function BreweryList() {
+const supabase = createClient();
+
+export default function BreweryListPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+    };
+    checkSession();
+  }, []);
 
   useEffect(() => {
     const fetchBreweries = async () => {
@@ -47,9 +59,11 @@ export default function BreweryList() {
         <h1>Brewery List</h1>
       </div>
       <main>
-        <ModalButton buttonTitle="ブルワリーを追加する">
-          <BreweryInsert />
-        </ModalButton>
+        {isLoggedIn && (
+          <ModalButton buttonTitle="ブルワリーを追加する">
+            <BreweryInsert />
+          </ModalButton>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {breweries?.map((brewery) => (
             <BreweryCard key={brewery.id} data={brewery} />
