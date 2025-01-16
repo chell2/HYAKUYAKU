@@ -18,9 +18,9 @@ export default function BreweryListPage() {
   useEffect(() => {
     const checkSession = async () => {
       const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setIsLoggedIn(!!session);
+        data: { user },
+      } = await supabase.auth.getUser();
+      setIsLoggedIn(!!user);
     };
     checkSession();
   }, []);
