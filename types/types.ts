@@ -26,16 +26,22 @@ export const clientTypeMap: { [key: string]: string } = {
 };
 
 export type ProductFormData = {
-  name: string;
-  description: string;
   abv: string | null;
-  ibu: number | null;
-  volume: number | null;
-  style: string | null;
+  brewery_id: string | null;
+  description: string | null;
   fermentation: string | null;
-  hops: string | null;
-  malts: string | null;
-  brewery_id: string;
+  hops: string[] | null;
+  ibu: number | null;
+  is_bottled: boolean;
+  malts: string[] | null;
+  name: string | null;
+  others: string[] | null;
+  price: number | null;
+  status: string | null;
+  stock: number | null;
+  style: string | null;
+  volume: number | null;
+  yeast: string[] | null;
 };
 
 export type BreweryFormData = {

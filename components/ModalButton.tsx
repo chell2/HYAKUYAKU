@@ -28,23 +28,29 @@ export const ModalButton: React.FC<ModalButtonProps> = ({
   return (
     <>
       <div className="flex justify-end pb-10">
-        <button className="btn" onClick={handleOpenModal}>
+        <button
+          className="btn btn-outline btn-secondary"
+          onClick={handleOpenModal}
+        >
           {buttonTitle}
         </button>
+        {isModalOpen && (
+          <dialog id="my_modal" className="modal">
+            <div className="modal-box w-11/12 max-w-5xl">
+              <button
+                className="btn btn-md btn-circle btn-ghost absolute right-2 top-2"
+                onClick={handleCloseModal}
+              >
+                ✕
+              </button>
+              <div className="grid justify-items-center py-4">{children}</div>
+            </div>
+            <form method="dialog" className="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+        )}
       </div>
-      {isModalOpen && (
-        <dialog id="my_modal" className="modal">
-          <div className="modal-box w-11/12 max-w-5xl">
-            <button
-              className="btn btn-md btn-circle btn-ghost absolute right-2 top-2"
-              onClick={handleCloseModal}
-            >
-              ✕
-            </button>
-            <p className="grid justify-items-center py-4">{children}</p>
-          </div>
-        </dialog>
-      )}
     </>
   );
 };
