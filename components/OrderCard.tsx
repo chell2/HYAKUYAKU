@@ -18,8 +18,8 @@ const OrderCard: React.FC<Props> = ({ data }: Props) => {
   };
 
   return (
-    <div className="card lg:card-side bg-base-100 shadow-xl">
-      <figure className="w-56">
+    <div className="card card-side bg-base-100 shadow-xl">
+      <figure>
         <img
           src={imgSrc}
           alt={data.client?.name || 'No Name'}
@@ -48,7 +48,7 @@ const OrderCard: React.FC<Props> = ({ data }: Props) => {
         </div>
         <div className="card-actions justify-end">
           <Link href={`/order/${data.id}`} className="btn btn-primary">
-            詳細を見る
+            メニューページを見る
           </Link>
         </div>
       </div>
