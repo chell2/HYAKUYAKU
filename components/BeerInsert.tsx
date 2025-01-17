@@ -178,7 +178,7 @@ const BeerInsert = () => {
           >
             <option value="">未選択</option>
             <option value="在庫わずか">在庫わずか</option>
-            <option value="在庫なし">在庫なし</option>
+            <option value="在庫切れ">在庫切れ</option>
           </select>
         </div>
         <div className="form-control w-full max-w-xs">
