@@ -110,8 +110,9 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
             )}
             {beer?.volume !== null && (
               <li>
-                内容量： {beer?.volume}ml {beer?.is_canned === true && '（缶）'}
-                {beer?.is_canned === false && '（瓶）'}
+                内容量： {beer?.volume}ml{' '}
+                {beer?.is_bottled === true && '（缶）'}
+                {beer?.is_bottled === false && '（瓶）'}
               </li>
             )}
           </ul>
