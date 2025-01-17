@@ -6,7 +6,10 @@ const ErrorPage = () => {
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-5xl font-bold">500</h1>
-          <p className="py-6">Server Error</p>
+          <p className="py-6">エラーが発生しました</p>
+          <a href="/login" className="btn btn-secondary mt-8">
+            ログイン
+          </a>
         </div>
       </div>
     </div>
