@@ -22,10 +22,15 @@ const Card: React.FC<Props> = ({ data }) => {
           }}
         />
       </figure>
-      <div className="card-body prose">
-        <h4 className="card-title">{data.name || 'No Name'}</h4>
-        <p className="text-sm">
-          {data.description || 'No description available'}
+      <div className="card-body">
+        {data?.status !== null && (
+          <div className="badge badge-accent text-xs">{data?.status}</div>
+        )}
+        {data?.status === null && <div className="mt-3"></div>}
+        <p className="card-title">{data.name || 'No Name'}</p>
+        <p>
+          {data?.style !== null && <span>{data?.style} / </span>}
+          {data?.abv !== null && <span>{data?.abv}%</span>}
         </p>
         <div className="card-actions justify-end">
           <Link href={`/beer/${data.id}`} key={data.id}>
