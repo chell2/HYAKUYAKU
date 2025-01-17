@@ -1,7 +1,9 @@
 'use client';
 
 import Loading from '@/app/loading';
+import ErrorPage from '@/app/error';
 import { formatDate } from '@/lib/utils/dateUtils';
+import { createClient } from '@/lib/utils/supabase/client';
 import {
   clientTypeMap,
   OrderWithItems,
@@ -10,12 +12,40 @@ import {
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-const OrderDetailPage = ({ params }: { params: { id: string } }) => {
+const supabase = createClient();
+
+export default function OrderDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [order, setOrder] = useState<OrderWithItems | null>(null);
   const [descriptions, setDescriptions] = useState<{
     [productId: string]: string;
   }>({});
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error || !data.session) {
+          setError('セッションが確認できません。ログインしてください。');
+        } else {
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error('セッションの確認中にエラーが発生しました:', error);
+        setError('セッションの確認中にエラーが発生しました。');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkSession();
+  }, []);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -39,10 +69,11 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
         setError(errorMessage);
       }
     };
-    if (params.id) {
+
+    if (isLoggedIn) {
       fetchOrder();
     }
-  }, [params.id]);
+  }, [isLoggedIn, params.id]);
 
   const generateDescription = async (product: ProductWithBrewery) => {
     if (descriptions[product.id]) return;
@@ -78,8 +109,17 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  if (error) return <p className="text-red-500">エラー: {error}</p>;
-  if (!order) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <ErrorPage />;
+  }
+
+  if (!order) {
+    return <Loading />;
+  }
 
   return (
     <div className="grid gap-4 items-center justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -118,10 +158,6 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
                 </figure>
                 <div className="card-body">
                   <h2 className="card-title">{item.product?.name}</h2>
-                  {/* <p>
-                    {item.quantity} x {item.product?.name} (
-                    {item.product?.brewery?.name})
-                  </p> */}
                   <div className="card-actions justify-end">
                     {!descriptions[item.product?.id || ''] && (
                       <button
@@ -151,6 +187,4 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
       </main>
     </div>
   );
-};
-
-export default OrderDetailPage;
+}

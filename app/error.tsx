@@ -1,6 +1,6 @@
 'use client';
 
-const Error = () => {
+const ErrorPage = () => {
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content text-center">
@@ -13,4 +13,4 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default ErrorPage;
