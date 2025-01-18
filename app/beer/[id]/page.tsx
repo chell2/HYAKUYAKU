@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/utils/supabase/client';
+import { createClient } from '@/lib/utils/supabase/server';
 import { getProfile } from '@/lib/utils/getProfile';
 import UpdateDeleteButtons from '@/components/BeerUpdateDeleteButtons';
 

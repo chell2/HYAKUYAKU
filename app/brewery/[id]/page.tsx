@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/utils/supabase/client';
+import { createClient } from '@/lib/utils/supabase/server';
 import { getProfile } from '@/lib/utils/getProfile';
 import UpdateDeleteButtons from '@/components/UpdateDeleteButtons';
 
@@ -16,7 +16,7 @@ const getDetailBrewery = async (id: string) => {
 const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
   const {
     data: { session },
-  } = await(await supabase).auth.getSession();
+  } = await (await supabase).auth.getSession();
   const user = session?.user;
   const profile = await getProfile(user?.id);
   const isAdmin = profile?.is_admin || false;
