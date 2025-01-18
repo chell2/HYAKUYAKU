@@ -20,9 +20,9 @@ export default function UpdateBreweryPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // ユーザー情報と権限を確認
+  // ユーザー情報とブルワリー情報の取得
   useEffect(() => {
-    const checkUserAndPermissions = async () => {
+    const fetchData = async () => {
       try {
         const {
           data: { session },
@@ -46,42 +46,37 @@ export default function UpdateBreweryPage({
         }
 
         setIsAdmin(true);
-      } catch (err) {
-        console.error('Error checking permissions:', err);
-        setError('権限の確認に失敗しました。');
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    checkUserAndPermissions();
-  }, [params.id, router]);
-
-  useEffect(() => {
-    const fetchBreweryData = async () => {
-      try {
-        const { data, error } = await supabase
+        const { data: breweryData, error: breweryError } = await supabase
           .from('breweries')
           .select('*')
           .eq('id', params.id)
           .single();
 
-        if (error || !brewery) {
+        if (breweryError || !breweryData) {
           router.push('/breweries');
           return;
         }
 
-        setBrewery(data as Brewery);
+        setBrewery(breweryData as Brewery);
       } catch (err) {
-        console.error('Error fetching brewery data:', err);
-        setError('ブルワリー情報の取得に失敗しました。');
+        console.error('Error:', err);
+        setError('データの取得中にエラーが発生しました。');
+      } finally {
+        setLoading(false);
       }
     };
 
+    fetchData();
+  }, [params.id, router]);
+
+  useEffect(() => {
     if (isAdmin) {
-      fetchBreweryData();
+      console.log(
+        `管理者がブルワリー ${params.id} の編集ページにアクセスしました。`
+      );
     }
-  }, [brewery, isAdmin, params.id, router]);
+  }, [isAdmin, params.id]);
 
   if (loading) {
     return <Loading />;
