@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/utils/supabase/client';
-import React from 'react';
+import { getProfile } from '@/lib/utils/getProfile';
 import UpdateDeleteButtons from '@/components/UpdateDeleteButtons';
 
 const supabase = createClient();
@@ -11,22 +11,6 @@ const getDetailBrewery = async (id: string) => {
     .eq('id', id)
     .single();
   return brewery;
-};
-
-const getProfile = async (userId: string | undefined) => {
-  if (!userId) return null;
-  const { data: profile, error } = await (await supabase)
-    .from('profile')
-    .select('is_admin')
-    .eq('id', userId)
-    .single();
-
-  if (error) {
-    console.error('Error fetching profile:', error);
-    return null;
-  }
-
-  return profile;
 };
 
 const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {

@@ -1,7 +1,6 @@
-import { createClient } from '@/lib/utils/supabase/server';
-import React from 'react';
-import UpdateDeleteButtons from '@/components/BeerUpdateDeleteButtons';
+import { createClient } from '@/lib/utils/supabase/client';
 import { getProfile } from '@/lib/utils/getProfile';
+import UpdateDeleteButtons from '@/components/BeerUpdateDeleteButtons';
 
 const supabase = createClient();
 
