@@ -51,18 +51,14 @@ const BeerInsert = () => {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
-    const { name, type } = e.target;
-    let value;
+    const { name, type, value } = e.target;
+    const checked =
+      e.target instanceof HTMLInputElement ? e.target.checked : false;
 
-    if (type === 'checkbox') {
-      value = (e.target as HTMLInputElement).checked;
-    } else if (type === 'select-one') {
-      value = (e.target as HTMLSelectElement).value;
-    } else {
-      value = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
-    }
-
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -322,7 +318,6 @@ const BeerInsert = () => {
               checked={formData.is_bottled}
               onChange={handleChange}
               className="toggle toggle-primary"
-              required
             />
             瓶
           </label>

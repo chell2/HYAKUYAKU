@@ -11,7 +11,7 @@ export async function insertProductData(formData: FormData) {
   const fermentation = formData.get('fermentation')?.toString();
   const hops = formData.get('hops')?.toString();
   const ibu = formData.get('ibu')?.toString();
-  const is_bottled = formData.get('is_bottled') === 'true';
+  const is_bottled = formData.get('is_bottled') ? true : false;
   const malts = formData.get('malts')?.toString();
   const name = formData.get('name')?.toString();
   const others = formData.get('others')?.toString();
@@ -29,7 +29,7 @@ export async function insertProductData(formData: FormData) {
   const { error } = await supabase.from('products').insert([
     {
       abv: abv || null,
-      brewery_id: brewery_id || null,
+      brewery_id: brewery_id,
       description: description || '',
       fermentation: fermentation || null,
       hops: hops ? hops.split(/、|,/).map((hop) => hop.trim()) : [],
