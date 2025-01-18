@@ -98,7 +98,7 @@ export default function AccountForm({ user }: { user: User | null }) {
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div className="form-control">
+              {/* <div className="form-control">
                 <label className="label">
                   <span className="label-text">アカウント種別</span>
                 </label>
@@ -110,7 +110,7 @@ export default function AccountForm({ user }: { user: User | null }) {
                   className="input input-bordered"
                   onChange={(e) => setRole(e.target.value)}
                 />
-              </div>
+              </div> */}
               <div className="form-control mt-4">
                 <button
                   className="btn btn-primary"

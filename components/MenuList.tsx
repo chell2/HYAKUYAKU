@@ -16,7 +16,7 @@ export default function MenuList() {
       <li>
         <Link href={'/order'}>Order List</Link>
       </li>
-      <li>
+      {/* <li>
         <details>
           <summary>Clients Page</summary>
           <ul className="p-2">
@@ -34,7 +34,7 @@ export default function MenuList() {
             </li>
           </ul>
         </details>
-      </li>
+      </li> */}
     </>
   );
 }
