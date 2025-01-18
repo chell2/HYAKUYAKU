@@ -14,7 +14,6 @@ const UpdateBreweryForm = ({ brewery }: { brewery: Brewery }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
 
   useEffect(() => {
     setFormData({
@@ -35,14 +34,12 @@ const UpdateBreweryForm = ({ brewery }: { brewery: Brewery }) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-    setSuccess(false);
 
     const result = await updateBrewery(formData);
 
     if (result?.error) {
       setError(result.error);
     } else {
-      setSuccess(true);
       router.push(`/brewery/${brewery.id}`);
     }
 
