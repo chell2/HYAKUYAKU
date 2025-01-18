@@ -1,5 +1,6 @@
+import Image from 'next/image';
 import { createClient } from '@/lib/utils/supabase/server';
-import { getProfile } from '@/lib/utils/getProfile';
+// import { getProfile } from '@/lib/utils/getProfile';
 import UpdateDeleteButtons from '@/components/BeerUpdateDeleteButtons';
 
 const supabase = createClient();
@@ -23,12 +24,12 @@ const getBreweryData = async (id: string) => {
 };
 
 const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
-  const {
-    data: { session },
-  } = await (await supabase).auth.getSession();
-  const user = session?.user;
-  const profile = await getProfile(user?.id);
-  const isAdmin = profile?.is_admin || false;
+  // const {
+  //   data: { session },
+  // } = await (await supabase).auth.getSession();
+  // const user = session?.user;
+  // const profile = await getProfile(user?.id);
+  // const isAdmin = profile?.is_admin || false;
 
   const beer = await getDetailBeer(params.id);
   const formattedPrice = beer?.price
@@ -62,10 +63,12 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
           </div>
         </div>
         <div className="grid justify-items-center">
-          <img
+          <Image
             src={`/${beer?.id}.png`}
-            alt=""
-            className="aspect-square w-72 rounded-md object-cover"
+            alt={`${beer?.name}`}
+            width={250}
+            height={250}
+            style={{ borderRadius: '10px' }}
           />
         </div>
         <article className="prose mt-8">
@@ -121,11 +124,14 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
           </ul>
         </article>
       </main>
-      {isAdmin && (
+      <div className="mt-4 w-full flex justify-end">
+        <UpdateDeleteButtons beerId={params.id} />
+      </div>
+      {/* {isAdmin && (
         <div className="mt-4 w-full flex justify-end">
           <UpdateDeleteButtons beerId={params.id} />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

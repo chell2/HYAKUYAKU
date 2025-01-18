@@ -1,5 +1,6 @@
+import Image from 'next/image';
 import { createClient } from '@/lib/utils/supabase/server';
-import React from 'react';
+// import { getProfile } from '@/lib/utils/getProfile';
 import UpdateDeleteButtons from '@/components/UpdateDeleteButtons';
 
 const supabase = createClient();
@@ -13,29 +14,13 @@ const getDetailBrewery = async (id: string) => {
   return brewery;
 };
 
-const getProfile = async (userId: string | undefined) => {
-  if (!userId) return null;
-  const { data: profile, error } = await (await supabase)
-    .from('profile')
-    .select('is_admin')
-    .eq('id', userId)
-    .single();
-
-  if (error) {
-    console.error('Error fetching profile:', error);
-    return null;
-  }
-
-  return profile;
-};
-
 const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
-  const {
-    data: { session },
-  } = await (await supabase).auth.getSession();
-  const user = session?.user;
-  const profile = await getProfile(user?.id);
-  const isAdmin = profile?.is_admin || false;
+  // const {
+  //   data: { session },
+  // } = await (await supabase).auth.getSession();
+  // const user = session?.user;
+  // const profile = await getProfile(user?.id);
+  // const isAdmin = profile?.is_admin || false;
 
   const brewery = await getDetailBrewery(params.id);
 
@@ -45,12 +30,13 @@ const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
         <div className="w-full text-center mb-8 py-4">
           <div className="stats shadow">
             <div className="stat">
-              <div className="w-32 rounded">
-                <img
-                  src={`/${brewery?.id}.png`}
-                  alt={brewery?.name || 'No Name'}
-                />
-              </div>
+              <Image
+                src={`/${brewery?.id}.png`}
+                alt={brewery?.name || 'No Name'}
+                width={160}
+                height={160}
+                style={{ borderRadius: '10px' }}
+              />
             </div>
             <div className="stat">
               <div className="stat-figure text-primary"></div>
@@ -64,11 +50,14 @@ const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
           <p>{brewery?.description}</p>
         </div>
       </main>
-      {isAdmin && (
+      <div className="mt-4 w-full flex justify-end">
+        <UpdateDeleteButtons breweryId={params.id} />
+      </div>
+      {/* {isAdmin && (
         <div className="mt-4 w-full flex justify-end">
           <UpdateDeleteButtons breweryId={params.id} />
         </div>
-      )}
+      )} */}
     </div>
   );
 };
