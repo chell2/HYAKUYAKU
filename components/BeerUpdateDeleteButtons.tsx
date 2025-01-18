@@ -3,26 +3,26 @@
 import { createClient } from '@/lib/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 
-const UpdateDeleteButtons = ({ breweryId }: { breweryId: string }) => {
+const UpdateDeleteButtons = ({ beerId }: { beerId: string }) => {
   const router = useRouter();
 
   const supabase = createClient();
 
   const handleUpdate = () => {
-    router.push(`/brewery/${breweryId}/update`);
+    router.push(`/beer/${beerId}/update`);
   };
 
   const handleDelete = async () => {
     if (window.confirm('本当に削除しますか？')) {
       const { error } = await supabase
-        .from('breweries')
+        .from('products')
         .update({ deleted_at: new Date().toISOString() })
-        .eq('id', breweryId);
+        .eq('id', beerId);
 
       if (error) {
-        console.error('Error deleting brewery:', error);
+        console.error('Error deleting beer:', error);
       } else {
-        router.push('/brewery');
+        router.push('/beer');
       }
     }
   };
