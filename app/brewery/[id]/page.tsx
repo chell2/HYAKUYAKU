@@ -1,28 +1,65 @@
+'use client';
+
 import Image from 'next/image';
-import { createClient } from '@/lib/utils/supabase/server';
-// import { getProfile } from '@/lib/utils/getProfile';
+import { Brewery } from '@/types/types';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/utils/supabase/client';
 import UpdateDeleteButtons from '@/components/UpdateDeleteButtons';
+import Loading from '@/app/loading';
 
 const supabase = createClient();
 
-const getDetailBrewery = async (id: string) => {
-  const { data: brewery } = await (await supabase)
-    .from('breweries')
-    .select('*')
-    .eq('id', id)
-    .single();
-  return brewery;
-};
+export default function BreweryDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [brewery, setBrewery] = useState<Brewery | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
-  // const {
-  //   data: { session },
-  // } = await (await supabase).auth.getSession();
-  // const user = session?.user;
-  // const profile = await getProfile(user?.id);
-  // const isAdmin = profile?.is_admin || false;
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setIsLoggedIn(!!user);
+    };
+    checkSession();
+  }, []);
 
-  const brewery = await getDetailBrewery(params.id);
+  useEffect(() => {
+    const fetchBreweryData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('breweries')
+          .select('*')
+          .eq('id', params.id)
+          .single();
+
+        if (error) {
+          throw new Error(`Failed to fetch products: ${error.message}`);
+        }
+        setBrewery(data as Brewery);
+      } catch (err: unknown) {
+        console.error('Error fetching breweries:', err);
+        setError('ブルワリー情報の取得に失敗しました。');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBreweryData();
+  }, [params.id]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <p>エラーが発生しました: {error}</p>;
+  }
 
   return (
     <div className="grid gap-4 justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -50,9 +87,11 @@ const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
           <p>{brewery?.description}</p>
         </div>
       </main>
-      <div className="mt-4 w-full flex justify-end">
-        <UpdateDeleteButtons breweryId={params.id} />
-      </div>
+      {isLoggedIn && (
+        <div className="mt-4 w-full flex justify-end">
+          <UpdateDeleteButtons breweryId={params.id} />
+        </div>
+      )}
       {/* {isAdmin && (
         <div className="mt-4 w-full flex justify-end">
           <UpdateDeleteButtons breweryId={params.id} />
@@ -60,6 +99,4 @@ const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
       )} */}
     </div>
   );
-};
-
-export default BreweryDetailPage;
+}
