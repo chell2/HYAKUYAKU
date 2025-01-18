@@ -39,7 +39,7 @@ export async function insertProductData(formData: FormData) {
       name: name || '',
       others: others ? others.split(/、|,/).map((others) => others.trim()) : [],
       price: price ? parseInt(price) : null,
-      status: status || '',
+      status: status === '' ? null : status,
       stock: stock ? parseInt(stock) : null,
       style: style || null,
       volume: volume ? parseInt(volume) : null,
