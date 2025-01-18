@@ -45,7 +45,7 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
       <main>
         <div className="w-full text-center mb-8 py-4">
           <div className="indicator">
-            {beer?.status && (
+            {beer?.status !== '' && (
               <span className="indicator-item badge badge-accent">
                 {beer?.status}
               </span>
