@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { updateBrewery } from './actions';
 import { Database } from '@/types/supabase';
@@ -15,6 +15,12 @@ const UpdateBreweryForm = ({ brewery }: { brewery: Brewery }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+
+  useEffect(() => {
+    setFormData({
+      ...brewery,
+    });
+  }, [brewery]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
