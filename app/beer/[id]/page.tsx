@@ -1,45 +1,96 @@
+'use client';
+
 import Image from 'next/image';
-import { createClient } from '@/lib/utils/supabase/server';
-// import { getProfile } from '@/lib/utils/getProfile';
+import { Product, Brewery } from '@/types/types';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/utils/supabase/client';
 import UpdateDeleteButtons from '@/components/BeerUpdateDeleteButtons';
+import Loading from '@/app/loading';
 
 const supabase = createClient();
 
-const getDetailBeer = async (id: string) => {
-  const { data: beer } = await (await supabase)
-    .from('products')
-    .select('*')
-    .eq('id', id)
-    .single();
-  return beer;
-};
+export default function BeerDetailPage({ params }: { params: { id: string } }) {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [beer, setBeer] = useState<Product | null>(null);
+  const [breweryData, setBreweryData] = useState<Brewery | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-const getBreweryData = async (id: string) => {
-  const { data: brewery } = await (await supabase)
-    .from('breweries')
-    .select('*')
-    .eq('id', id)
-    .single();
-  return brewery;
-};
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setIsLoggedIn(!!user);
+    };
+    checkSession();
+  }, []);
 
-const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
-  // const {
-  //   data: { session },
-  // } = await (await supabase).auth.getSession();
-  // const user = session?.user;
-  // const profile = await getProfile(user?.id);
-  // const isAdmin = profile?.is_admin || false;
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .is('deleted_at', null)
+          .eq('id', params.id)
+          .single();
 
-  const beer = await getDetailBeer(params.id);
+        if (error) {
+          throw new Error(`Failed to fetch products: ${error.message}`);
+        }
+
+        setBeer(data as Product);
+      } catch (err: unknown) {
+        console.error('Error fetching products:', err);
+        setError('商品情報の取得に失敗しました。');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [params.id]);
+  useEffect(() => {
+    if (beer?.brewery_id) {
+      const fetchBreweryData = async () => {
+        try {
+          const { data: brewery, error } = await supabase
+            .from('breweries')
+            .select('*')
+            .eq('id', beer.brewery_id || '')
+            .single();
+
+          if (error) {
+            throw new Error(`Failed to fetch brewery: ${error.message}`);
+          }
+
+          setBreweryData(brewery as Brewery);
+        } catch (err: unknown) {
+          console.error('Error fetching brewery:', err);
+          setError('ブルワリー情報の取得に失敗しました。');
+        }
+      };
+
+      fetchBreweryData();
+    }
+  }, [beer?.brewery_id]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <p>エラーが発生しました: {error}</p>;
+  }
+
   const formattedPrice = beer?.price
     ? new Intl.NumberFormat('ja-JP', {
         style: 'currency',
         currency: 'JPY',
       }).format(beer.price)
     : null;
-  const brewery =
-    beer && beer.brewery_id ? await getBreweryData(beer.brewery_id) : null;
+
   return (
     <div className="grid gap-4 justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main>
@@ -65,7 +116,7 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
         <div className="grid justify-items-center">
           <Image
             src={`/${beer?.id}.png`}
-            alt={`${beer?.name}`}
+            alt={`${beer?.name}` || 'No Name'}
             width={250}
             height={250}
             style={{ borderRadius: '10px' }}
@@ -79,11 +130,11 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
             {beer?.price && <li>価格： {formattedPrice}</li>}
             <li>
               ブルワリー：{' '}
-              <a href={`/brewery/${brewery?.id}`} className="link">
-                {brewery?.name}
+              <a href={`/brewery/${breweryData?.id}`} className="link">
+                {breweryData?.name}
               </a>
             </li>
-            <li>地域： {brewery?.region}</li>
+            <li>地域： {breweryData?.region}</li>
             {beer?.fermentation !== null && beer?.fermentation !== '-' && (
               <li>
                 発酵：
@@ -124,9 +175,11 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
           </ul>
         </article>
       </main>
-      <div className="mt-4 w-full flex justify-end">
-        <UpdateDeleteButtons beerId={params.id} />
-      </div>
+      {isLoggedIn && (
+        <div className="mt-4 w-full flex justify-end">
+          <UpdateDeleteButtons beerId={params.id} />
+        </div>
+      )}
       {/* {isAdmin && (
         <div className="mt-4 w-full flex justify-end">
           <UpdateDeleteButtons beerId={params.id} />
@@ -134,6 +187,4 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
       )} */}
     </div>
   );
-};
-
-export default BeerDetailPage;
+}
