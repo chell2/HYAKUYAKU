@@ -11,6 +11,7 @@ import {
 } from '@/types/types';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import './print.css';
 
 const supabase = createClient();
 
@@ -121,10 +122,14 @@ export default function OrderDetailPage({
     return <Loading />;
   }
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="grid gap-4 items-center justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main>
-        <div className="w-full text-center mb-8 py-4">
+        <div className="w-full text-center">
           <div className="stats shadow">
             <div className="stat">
               <div className="w-32 rounded">
@@ -146,8 +151,16 @@ export default function OrderDetailPage({
             </div>
           </div>
         </div>
+        <div className="grid justify-items-end">
+          <button
+            onClick={handlePrint}
+            className="btn btn-outline btn-primary mb-4 print-hide"
+          >
+            印　刷
+          </button>
+        </div>
         {order?.order_items.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 print-content">
             {order.order_items.map((item, index) => (
               <div key={index} className="card bg-base-100 shadow-xl">
                 <figure className="w-auto">

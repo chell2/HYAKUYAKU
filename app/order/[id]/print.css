@@ -1,0 +1,51 @@
+@media print {
+  /* 印刷時に不要な要素を非表示 */
+  .print-hide,
+  header,
+  footer,
+  .btn,
+  .navbar {
+    display: none !important;
+  }
+  
+  /* 最初のページを非表示にする */
+  @page :first {
+    display: none ;
+  }
+
+  /* ページ設定 */
+  @page {
+    size: A4 landscape; /* 縦は  */
+    margin: 10mm; /* 余白 */
+  }
+
+  /* 印刷対象のコンテンツを調整 */
+  .print-content {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    page-break-inside: avoid; /* ページ区切りを調整 */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 列 */
+    grid-template-rows: repeat(2, 1fr); /* 行 */
+    gap: 5mm; /* カード間の余白 */
+    height: 100%; /* 高さを A4 に合わせる */
+  }
+
+  /* カードのスタイル */
+  .print-content .card {
+    page-break-inside: avoid; /* カード内で改ページしない */
+    break-inside: avoid; /* カード内で改ページしない */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+
+  /* その他の印刷用スタイル */
+  body {
+    font-size: 5pt; /* フォントサイズを調整 */
+  }
+}
