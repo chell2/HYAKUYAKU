@@ -97,20 +97,26 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
               <li>ABV： {beer?.abv}%</li>
             )}
             {beer?.ibu !== null && <li>IBU： {beer?.ibu}</li>}
-            {Array.isArray(beer?.hops) && beer?.hops.length > 0 && (
-              <li>ホップ： {beer?.hops.join(', ')}</li>
-            )}
-            {Array.isArray(beer?.malts) && beer?.malts.length > 0 && (
-              <li>モルト： {beer?.malts.join(', ')}</li>
-            )}
-            {Array.isArray(beer?.others) && beer?.others.length > 0 && (
-              <li>その他： {beer?.others.join(', ')}</li>
-            )}
+            {beer?.hops !== null &&
+              Array.isArray(beer?.hops) &&
+              beer?.hops.length > 0 && (
+                <li>ホップ： {beer?.hops.join(', ')}</li>
+              )}
+            {beer?.malts !== null &&
+              Array.isArray(beer?.malts) &&
+              beer?.malts.length > 0 && (
+                <li>モルト： {beer?.malts.join(', ')}</li>
+              )}
+            {beer?.others !== null &&
+              Array.isArray(beer?.others) &&
+              beer?.others.length > 0 && (
+                <li>その他： {beer?.others.join(', ')}</li>
+              )}
             {beer?.volume !== null && (
               <li>
                 内容量： {beer?.volume}ml{' '}
-                {beer?.is_bottled === true && '（缶）'}
-                {beer?.is_bottled === false && '（瓶）'}
+                {beer?.is_bottled === false && '（缶）'}
+                {beer?.is_bottled === true && '（瓶）'}
               </li>
             )}
           </ul>
