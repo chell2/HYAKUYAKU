@@ -2,12 +2,9 @@
 
 import { createClient } from '@/lib/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 const UpdateDeleteButtons = ({ breweryId }: { breweryId: string }) => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const supabase = createClient();
 
@@ -16,9 +13,6 @@ const UpdateDeleteButtons = ({ breweryId }: { breweryId: string }) => {
   };
 
   const handleDelete = async () => {
-    setIsLoading(true);
-    setError(null);
-
     if (window.confirm('本当に削除しますか？')) {
       const { error } = await supabase
         .from('breweries')
@@ -27,13 +21,10 @@ const UpdateDeleteButtons = ({ breweryId }: { breweryId: string }) => {
 
       if (error) {
         console.error('Error deleting brewery:', error);
-        setError(error.message);
       } else {
         router.push('/brewery');
       }
     }
-
-    setIsLoading(false);
   };
 
   return (
