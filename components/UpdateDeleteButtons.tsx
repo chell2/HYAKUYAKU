@@ -1,20 +1,39 @@
 'use client';
 
+import { createClient } from '@/lib/utils/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const UpdateDeleteButtons = ({ breweryId }: { breweryId: string }) => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const supabase = createClient();
 
   const handleUpdate = () => {
-    // 更新ページへ遷移 (例: /brewery/[id]/update)
     router.push(`/brewery/${breweryId}/update`);
   };
 
   const handleDelete = async () => {
-    // 削除処理を実行 (Supabaseのdelete()を使用)
-    // ...
-    // 削除後、一覧ページへリダイレクト (例: /brewery)
-    router.push('/brewery');
+    setIsLoading(true);
+    setError(null);
+
+    if (window.confirm('本当に削除しますか？')) {
+      const { error } = await supabase
+        .from('breweries')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', breweryId);
+
+      if (error) {
+        console.error('Error deleting brewery:', error);
+        setError(error.message);
+      } else {
+        router.push('/brewery');
+      }
+    }
+
+    setIsLoading(false);
   };
 
   return (

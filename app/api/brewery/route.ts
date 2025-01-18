@@ -9,7 +9,8 @@ export async function GET() {
   try {
     const { data: breweries, error } = await supabase
       .from('breweries')
-      .select('*');
+      .select('*')
+      .is('deleted_at', null);
 
     if (error) {
       console.error('Error fetching breweries:', error);
