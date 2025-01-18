@@ -1,50 +1,94 @@
-import { createClient } from '@/lib/utils/supabase/server';
-import { redirect } from 'next/navigation';
+'use client';
+
+import { Brewery } from '@/types/types';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/utils/supabase/client';
 import UpdateBreweryForm from './update-brewery-form';
+import Loading from '@/app/loading';
 
 const supabase = createClient();
 
-const getProfile = async (userId: string | undefined) => {
-  if (!userId) return null;
-  const { data: profile, error } = await (await supabase)
-    .from('profile')
-    .select('is_admin')
-    .eq('id', userId)
-    .single();
-
-  if (error) {
-    console.error('Error fetching profile:', error);
-    return null;
-  }
-
-  return profile;
-};
-
-export default async function UpdateBreweryPage({
+export default function UpdateBreweryPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const {
-    data: { session },
-  } = await (await supabase).auth.getSession();
-  const user = session?.user;
+  const router = useRouter();
+  const [brewery, setBrewery] = useState<Brewery | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const profile = await getProfile(user?.id);
-  const isAdmin = profile?.is_admin || false;
+  // ユーザー情報と権限を確認
+  useEffect(() => {
+    const checkUserAndPermissions = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const user = session?.user;
 
-  if (!isAdmin) {
-    redirect(`/brewery/${params.id}`);
+        if (!user) {
+          router.push('/login');
+          return;
+        }
+
+        const { data: profile, error: profileError } = await supabase
+          .from('profile')
+          .select('is_admin')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError || !profile?.is_admin) {
+          router.push(`/brewery/${params.id}`);
+          return;
+        }
+
+        setIsAdmin(true);
+      } catch (err) {
+        console.error('Error checking permissions:', err);
+        setError('権限の確認に失敗しました。');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkUserAndPermissions();
+  }, [params.id, router]);
+
+  useEffect(() => {
+    const fetchBreweryData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('breweries')
+          .select('*')
+          .eq('id', params.id)
+          .single();
+
+        if (error || !brewery) {
+          router.push('/breweries');
+          return;
+        }
+
+        setBrewery(data as Brewery);
+      } catch (err) {
+        console.error('Error fetching brewery data:', err);
+        setError('ブルワリー情報の取得に失敗しました。');
+      }
+    };
+
+    if (isAdmin) {
+      fetchBreweryData();
+    }
+  }, [brewery, isAdmin, params.id, router]);
+
+  if (loading) {
+    return <Loading />;
   }
 
-  const { data: brewery } = await (await supabase)
-    .from('breweries')
-    .select('*')
-    .eq('id', params.id)
-    .single();
-
-  if (!brewery) {
-    redirect('/breweries');
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
   }
 
   return (
@@ -52,7 +96,7 @@ export default async function UpdateBreweryPage({
       <main>
         <div className="container mx-auto p-4">
           <h1 className="text-2xl font-bold mb-4">ブルワリー情報の更新</h1>
-          <UpdateBreweryForm brewery={brewery} />
+          {brewery && <UpdateBreweryForm brewery={brewery} />}
         </div>
       </main>
     </div>
