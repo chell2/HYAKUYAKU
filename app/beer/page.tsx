@@ -29,12 +29,16 @@ export default function BeerListPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('/api/beer');
-        if (!res.ok) {
-          throw new Error(`Failed to fetch products: ${res.status}`);
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .is('deleted_at', null);
+
+        if (error) {
+          throw new Error(`Failed to fetch products: ${error.message}`);
         }
-        const data: Product[] = await res.json();
-        setBeerlist(data);
+
+        setBeerlist(data as Product[]);
       } catch (err: unknown) {
         console.error('Error fetching products:', err);
         setError('商品情報の取得に失敗しました。');
