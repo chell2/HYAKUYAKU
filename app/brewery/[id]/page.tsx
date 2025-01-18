@@ -1,11 +1,16 @@
-import { createClient } from '@/lib/utils/supabase/server';
+import {
+  createServerComponentClient,
+  SupabaseClient,
+} from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { Database } from '@/types/supabase';
 import React from 'react';
-import UpdateDeleteButtons from '@/components/UpdateDeleteButtons';
 
-const supabase = createClient();
-
-const getDetailBrewery = async (id: string) => {
-  const { data: brewery } = await (await supabase)
+const getDetailBrewery = async (
+  id: string,
+  supabase: SupabaseClient<Database>
+) => {
+  const { data: brewery } = await supabase
     .from('breweries')
     .select('*')
     .eq('id', id)
@@ -13,31 +18,9 @@ const getDetailBrewery = async (id: string) => {
   return brewery;
 };
 
-const getProfile = async (userId: string | undefined) => {
-  if (!userId) return null;
-  const { data: profile, error } = await (await supabase)
-    .from('profile')
-    .select('is_admin')
-    .eq('id', userId)
-    .single();
-
-  if (error) {
-    console.error('Error fetching profile:', error);
-    return null;
-  }
-
-  return profile;
-};
-
 const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
-  const {
-    data: { session },
-  } = await(await supabase).auth.getSession();
-  const user = session?.user;
-  const profile = await getProfile(user?.id);
-  const isAdmin = profile?.is_admin || false;
-
-  const brewery = await getDetailBrewery(params.id);
+  const supabase = createServerComponentClient<Database>({ cookies });
+  const brewery = await getDetailBrewery(params.id, supabase);
 
   return (
     <div className="grid gap-4 justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -64,11 +47,6 @@ const BreweryDetailPage = async ({ params }: { params: { id: string } }) => {
           <p>{brewery?.description}</p>
         </div>
       </main>
-      {isAdmin && (
-        <div className="mt-4 w-full flex justify-end">
-          <UpdateDeleteButtons breweryId={params.id} />
-        </div>
-      )}
     </div>
   );
 };
