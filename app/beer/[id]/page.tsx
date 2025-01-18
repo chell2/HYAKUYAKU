@@ -1,16 +1,12 @@
-import {
-  createServerComponentClient,
-  SupabaseClient,
-} from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@/types/supabase';
+import { createClient } from '@/lib/utils/supabase/server';
 import React from 'react';
+import UpdateDeleteButtons from '@/components/BeerUpdateDeleteButtons';
+import { getProfile } from '@/lib/utils/getProfile';
 
-const getDetailBeer = async (
-  id: string,
-  supabase: SupabaseClient<Database>
-) => {
-  const { data: beer } = await supabase
+const supabase = createClient();
+
+const getDetailBeer = async (id: string) => {
+  const { data: beer } = await (await supabase)
     .from('products')
     .select('*')
     .eq('id', id)
@@ -18,11 +14,8 @@ const getDetailBeer = async (
   return beer;
 };
 
-const getBreweryData = async (
-  id: string,
-  supabase: SupabaseClient<Database>
-) => {
-  const { data: brewery } = await supabase
+const getBreweryData = async (id: string) => {
+  const { data: brewery } = await (await supabase)
     .from('breweries')
     .select('*')
     .eq('id', id)
@@ -31,8 +24,14 @@ const getBreweryData = async (
 };
 
 const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
-  const supabase = createServerComponentClient<Database>({ cookies });
-  const beer = await getDetailBeer(params.id, supabase);
+  const {
+    data: { session },
+  } = await (await supabase).auth.getSession();
+  const user = session?.user;
+  const profile = await getProfile(user?.id);
+  const isAdmin = profile?.is_admin || false;
+
+  const beer = await getDetailBeer(params.id);
   const formattedPrice = beer?.price
     ? new Intl.NumberFormat('ja-JP', {
         style: 'currency',
@@ -40,9 +39,7 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
       }).format(beer.price)
     : null;
   const brewery =
-    beer && beer.brewery_id
-      ? await getBreweryData(beer.brewery_id, supabase)
-      : null;
+    beer && beer.brewery_id ? await getBreweryData(beer.brewery_id) : null;
   return (
     <div className="grid gap-4 justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main>
@@ -95,6 +92,7 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
                   beer?.fermentation}
               </li>
             )}
+            {beer?.style && <li>スタイル： {beer?.style}</li>}
             {beer?.abv !== null && beer?.abv !== '-' && (
               <li>ABV： {beer?.abv}%</li>
             )}
@@ -118,6 +116,11 @@ const BeerDetailPage = async ({ params }: { params: { id: string } }) => {
           </ul>
         </article>
       </main>
+      {isAdmin && (
+        <div className="mt-4 w-full flex justify-end">
+          <UpdateDeleteButtons beerId={params.id} />
+        </div>
+      )}
     </div>
   );
 };

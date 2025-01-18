@@ -157,6 +157,7 @@ export type Database = {
           abv: string | null
           brewery_id: string | null
           created_at: string
+          deleted_at: string | null
           description: string | null
           fermentation: string | null
           hops: string[] | null
@@ -177,6 +178,7 @@ export type Database = {
           abv?: string | null
           brewery_id?: string | null
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           fermentation?: string | null
           hops?: string[] | null
@@ -197,6 +199,7 @@ export type Database = {
           abv?: string | null
           brewery_id?: string | null
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           fermentation?: string | null
           hops?: string[] | null

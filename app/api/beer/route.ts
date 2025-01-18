@@ -9,7 +9,8 @@ export async function GET() {
   try {
     const { data: products, error } = await supabase
       .from('products')
-      .select('*');
+      .select('*')
+      .is('deleted_at', null);
 
     if (error) {
       console.error('Error fetching products:', error);
