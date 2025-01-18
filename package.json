@@ -15,7 +15,7 @@
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/gotrue-js": "^2.67.3",
     "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.47.12",
+    "@supabase/supabase-js": "^2.47.16",
     "next": "14.2.22",
     "next-auth": "^4.24.11",
     "openai": "^4.77.0",
