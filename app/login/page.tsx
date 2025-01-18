@@ -45,12 +45,12 @@ export default async function LoginPage(props: {
               </label>
             </div>
             <div className="form-control mt-2">
-              <button className="btn btn-secondary" formAction={login}>
+              <button className="btn btn-primary" formAction={login}>
                 ログイン
               </button>
             </div>
             <div className="form-control mt-2">
-              <button className="btn btn-primary" formAction={signup}>
+              <button className="btn btn-secondary" formAction={signup}>
                 新規登録
               </button>
             </div>

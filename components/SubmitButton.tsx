@@ -17,7 +17,7 @@ export function SubmitButton({
 
   return (
     <button
-      className="btn btn-primary mb-2"
+      className="btn btn-secondary mb-2"
       type="submit"
       aria-disabled={pending}
       {...props}
