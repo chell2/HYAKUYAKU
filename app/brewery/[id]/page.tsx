@@ -14,19 +14,38 @@ export default function BreweryDetailPage({
 }: {
   params: { id: string };
 }) {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [brewery, setBrewery] = useState<Brewery | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkSession = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setIsLoggedIn(!!user);
+    const checkUser = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (user) {
+          // 管理者権限を確認
+          const { data: profile, error: profileError } = await supabase
+            .from('profile')
+            .select('is_admin')
+            .eq('id', user.id)
+            .single();
+
+          if (profileError) {
+            console.error('Error fetching profile:', profileError);
+          } else {
+            setIsAdmin(!!profile?.is_admin);
+          }
+        }
+      } catch (err) {
+        console.error('Error checking user:', err);
+        setError('ユーザー情報の確認に失敗しました。');
+      }
     };
-    checkSession();
+    checkUser();
   }, []);
 
   useEffect(() => {
@@ -87,16 +106,11 @@ export default function BreweryDetailPage({
           <p>{brewery?.description}</p>
         </div>
       </main>
-      {isLoggedIn && (
+      {isAdmin && (
         <div className="mt-4 w-full flex justify-end">
           <UpdateDeleteButtons breweryId={params.id} />
         </div>
       )}
-      {/* {isAdmin && (
-        <div className="mt-4 w-full flex justify-end">
-          <UpdateDeleteButtons breweryId={params.id} />
-        </div>
-      )} */}
     </div>
   );
 }
