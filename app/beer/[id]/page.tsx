@@ -139,6 +139,10 @@ export default function BeerDetailPage({ params }: { params: { id: string } }) {
             width={250}
             height={250}
             style={{ borderRadius: '10px' }}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = '/pleaceholder.png';
+            }}
           />
         </div>
         <article className="prose mt-8">
