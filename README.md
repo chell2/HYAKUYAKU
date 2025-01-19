@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+<samp>
 
-## Getting Started
+# ADA2nd 課題
 
-First, run the development server:
+💜  卒業制作  💜
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+</samp>
+</div>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1.プロダクト名
 
-## Learn More
+HYAKUYAKU
 
-To learn more about Next.js, take a look at the following resources:
+### 2.課題内容（どんな作品？）
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+クラフトビール酒屋と顧客（飲食店やヘアサロンなどのお店）の商品情報の共有をスムーズにします。
+- 商品情報の閲覧・管理
+- ブルワリー情報の閲覧・管理
+- 受注状況一覧の閲覧
+- 顧客専用メニューページ：生成AIによる説明文生成
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3.DEMO
 
-## Deploy on Vercel
+- https://hyakuya9.vercel.app/
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4.IDまたはPasswordについて
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 実際のメールアドレスにより新規登録（一般アカウント）が可能です。
+- 管理者アカウントへの変更が必要な場合はお知らせください。
+
+### 5.使用技術
+
+- Next.js(App Router)
+- TypeScript
+- daisyUI（TailwindCSS）
+- Vercel
+- Supabase
+- GEMINI
