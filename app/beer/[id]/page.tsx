@@ -141,7 +141,7 @@ export default function BeerDetailPage({ params }: { params: { id: string } }) {
             style={{ borderRadius: '10px' }}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.src = '/pleaceholder.png';
+              target.src = '/placeholder.png';
             }}
           />
         </div>

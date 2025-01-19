@@ -92,6 +92,10 @@ export default function BreweryDetailPage({
                 width={160}
                 height={160}
                 style={{ borderRadius: '10px' }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/noimage.png';
+                }}
               />
             </div>
             <div className="stat">
