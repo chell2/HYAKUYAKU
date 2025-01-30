@@ -1,4 +1,5 @@
 'use client';
+
 import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/lib/utils/supabase/client';
 import { type User } from '@supabase/supabase-js';
@@ -30,7 +31,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       }
     } catch (err: unknown) {
       console.error('Error loading user data:', err);
-      alert('Error loading user data!');
+      alert('ERROR: データを読み込みできません');
     } finally {
       setLoading(false);
     }
@@ -57,10 +58,10 @@ export default function AccountForm({ user }: { user: User | null }) {
         updated_at: new Date().toISOString(),
       });
       if (error) throw error;
-      alert('Profile updated!');
+      alert('プロフィールを更新しました');
     } catch (err: unknown) {
       console.error('Error updating the data:', err);
-      alert('Error updating the data!');
+      alert('ERROR: データを更新できませんでした');
     } finally {
       setLoading(false);
     }
