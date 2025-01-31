@@ -170,8 +170,21 @@ export default function OrderDetailPage({
                   />
                 </figure>
                 <div className="card-body">
-                  <h2 className="card-title">{item.product?.name}</h2>
-                  <div className="card-actions justify-end">
+                  <div className="h-24">
+                    {/* 商品情報 */}
+                    <h2 className="card-title">{item.product?.name}</h2>
+                    <p>
+                      {item.product?.style !== null && (
+                        <span>{item.product?.style} / </span>
+                      )}
+                      {item.product?.abv !== null && (
+                        <span>{item.product?.abv}%</span>
+                      )}
+                    </p>
+                  </div>
+
+                  {/* 説明文 */}
+                  <div className="flex flex-col gap-y-2">
                     {!descriptions[item.product?.id || ''] && (
                       <button
                         className="btn btn-primary"
@@ -185,9 +198,12 @@ export default function OrderDetailPage({
                       </button>
                     )}
                     {descriptions[item.product?.id || ''] && (
-                      <ReactMarkdown>
-                        {descriptions[item.product?.id || '']}
-                      </ReactMarkdown>
+                      <>
+                        <div className="divider"></div>
+                        <ReactMarkdown>
+                          {descriptions[item.product?.id || '']}
+                        </ReactMarkdown>
+                      </>
                     )}
                   </div>
                 </div>
