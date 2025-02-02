@@ -21,6 +21,7 @@ export async function insertProductData(formData: FormData) {
   const style = formData.get('style')?.toString();
   const volume = formData.get('volume')?.toString();
   const yeast = formData.get('yeast')?.toString();
+  const image_path = formData.get('image_path')?.toString();
 
   if (!name || !description) {
     throw new Error('Name and description are required.');
@@ -44,6 +45,7 @@ export async function insertProductData(formData: FormData) {
       style: style || null,
       volume: volume ? parseInt(volume) : null,
       yeast: yeast ? yeast.split(/、|,/).map((yeast) => yeast.trim()) : [],
+      image_path: image_path || null,
     },
   ]);
 
