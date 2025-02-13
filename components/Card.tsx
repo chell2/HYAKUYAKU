@@ -7,35 +7,21 @@ interface Props {
 
 const Card: React.FC<Props> = ({ data }) => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const bucketName = 'images';
+  const basePath = `${supabaseUrl}/storage/v1/object/public/images`;
+
   const getImageUrl = (imagePath: string | null) => {
-    return imagePath
-      ? `${supabaseUrl}/storage/v1/object/public/${bucketName}/${imagePath}`
-      : `${supabaseUrl}/storage/v1/object/public/${bucketName}/products/placeholder.png`;
+    if (!imagePath) {
+      return `${basePath}/products/placeholder.png`; // 画像がない場合はデフォルト画像
+    }
+    return `${basePath}/${imagePath}`;
   };
-  console.log(getImageUrl(data.image_path));
+  console.log('data.image_path:', data.image_path);
+  console.log('Generated image URL:', getImageUrl(data.image_path));
 
   return (
     <div className="card bg-base-100 w-64 shadow-xl">
       <figure className="w-auto aspect-square">
-        {data.image_path && (
-          <img
-            src={getImageUrl(data.image_path)}
-            alt={data.name || 'No Name'}
-          />
-        )}
-        {/* <img
-          src={`/${data.id}.png`}
-          alt={data.name || 'No Name'}
-          onError={(
-            e: React.SyntheticEvent<HTMLImageElement> & {
-              currentTarget: HTMLImageElement;
-            }
-          ) => {
-            console.error('Error loading image:', `/${data.id}.png`, e);
-            e.currentTarget.src = '/placeholder.png';
-          }}
-        /> */}
+        <img src={getImageUrl(data.image_path)} alt={data.name || 'No Name'} />
       </figure>
       <div className="card-body">
         {data?.status !== null && (
