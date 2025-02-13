@@ -4,6 +4,8 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { updateBeer } from './actions';
 import { Database } from '@/types/supabase';
+import { getImageUrl } from '@/lib/utils/getImageUrl';
+import { createClient } from '@/lib/utils/supabase/client';
 
 type Beer = Database['public']['Tables']['products']['Row'];
 type Brewery = Database['public']['Tables']['breweries']['Row'];
@@ -15,6 +17,7 @@ type UpdateBeerFormProps = {
 
 const UpdateBeerForm = ({ beer, breweries }: UpdateBeerFormProps) => {
   const router = useRouter();
+  const [supabase] = useState(() => createClient());
   const [formData, setFormData] = useState<Beer>({
     ...beer,
     is_bottled: beer.is_bottled || false,
@@ -22,11 +25,18 @@ const UpdateBeerForm = ({ beer, breweries }: UpdateBeerFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    beer.image_path ? getImageUrl(beer.image_path) : null
+  );
 
   useEffect(() => {
     setFormData({
       ...beer,
     });
+    if (beer.image_path) {
+      setPreviewUrl(getImageUrl(beer.image_path));
+    }
   }, [beer]);
 
   const handleChange = (
@@ -42,87 +52,133 @@ const UpdateBeerForm = ({ beer, breweries }: UpdateBeerFormProps) => {
       [name]: updatedValue,
     }));
   };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (file: File) => {
+    if (!file) {
+      return null;
+    }
+
+    const filePath = `${Date.now()}-${file.name}`;
+
+    const { data, error } = await supabase.storage
+      .from('images/products')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (error) {
+      console.error('Supabase Storage Error:', error);
+      throw new Error('画像のアップロードに失敗しました: ' + error.message);
+    }
+
+    return data.path;
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
     setSuccess(false);
 
-    const handleArrayField = (
-      existingValue: string[] | null | undefined,
-      newValue: string | string[] | null | undefined
-    ) => {
-      if (typeof newValue === 'string') {
-        const trimmedValue = newValue.trim();
-        if (/[、,]/.test(trimmedValue)) {
-          return trimmedValue
-            .split(/、|,/)
-            .map((item) => item.trim())
-            .filter((item) => item !== ''); // 空の要素を削除
-        } else if (trimmedValue !== '') {
-          return [trimmedValue];
+    let uploadedImagePath = formData.image_path || null;
+
+    try {
+      if (selectedFile) {
+        uploadedImagePath = await uploadImage(selectedFile);
+      }
+
+      const handleArrayField = (
+        existingValue: string[] | null | undefined,
+        newValue: string | string[] | null | undefined
+      ) => {
+        if (typeof newValue === 'string') {
+          const trimmedValue = newValue.trim();
+          if (/[、,]/.test(trimmedValue)) {
+            return trimmedValue
+              .split(/、|,/)
+              .map((item) => item.trim())
+              .filter((item) => item !== ''); // 空の要素を削除
+          } else if (trimmedValue !== '') {
+            return [trimmedValue];
+          } else {
+            return null; // 空白の場合はnullを返す
+          }
         } else {
-          return null; // 空白の場合はnullを返す
+          return existingValue; // 変更がない場合は元の値を返す
         }
+      };
+
+      // 数値型フィールドの処理
+      const handleNumberField = (value: number | undefined | null) => {
+        if (value === undefined || value === null) {
+          return null;
+        }
+        const parsedValue = Number(value);
+        return isNaN(parsedValue) ? null : parsedValue;
+      };
+
+      // 文字列型フィールドの処理
+      const handleStringField = (value: string | null | undefined) => {
+        if (value === undefined || value === null || value === '') {
+          return null;
+        }
+        return value;
+      };
+
+      const updatedFormData = {
+        ...formData,
+        image_path: uploadedImagePath,
+        price: handleNumberField(formData.price),
+        ibu: handleNumberField(formData.ibu),
+        volume: handleNumberField(formData.volume),
+        style: handleStringField(formData.style),
+        abv: handleStringField(formData.abv),
+        fermentation: handleStringField(formData.fermentation),
+        status: handleStringField(formData.status),
+        hops: handleArrayField(
+          formData.hops as string[] | null | undefined,
+          formData.hops as unknown as string
+        ),
+        malts: handleArrayField(
+          formData.malts as string[] | null | undefined,
+          formData.malts as unknown as string
+        ),
+        yeast: handleArrayField(
+          formData.yeast as string[] | null | undefined,
+          formData.yeast as unknown as string
+        ),
+        others: handleArrayField(
+          formData.others as string[] | null | undefined,
+          formData.others as unknown as string
+        ),
+      };
+
+      const result = await updateBeer(updatedFormData, beer.id);
+
+      if (result?.error) {
+        setError(result.error);
       } else {
-        return existingValue; // 変更がない場合は元の値を返す
+        setSuccess(true);
+        router.push(`/beer/${beer.id}`);
       }
-    };
-
-    // 数値型フィールドの処理
-    const handleNumberField = (value: number | undefined | null) => {
-      if (value === undefined || value === null) {
-        return null;
-      }
-      const parsedValue = Number(value);
-      return isNaN(parsedValue) ? null : parsedValue;
-    };
-
-    // 文字列型フィールドの処理
-    const handleStringField = (value: string | null | undefined) => {
-      if (value === undefined || value === null || value === '') {
-        return null;
-      }
-      return value;
-    };
-
-    const updatedFormData = {
-      ...formData,
-      price: handleNumberField(formData.price),
-      ibu: handleNumberField(formData.ibu),
-      volume: handleNumberField(formData.volume),
-      style: handleStringField(formData.style),
-      abv: handleStringField(formData.abv),
-      fermentation: handleStringField(formData.fermentation),
-      status: handleStringField(formData.status),
-      hops: handleArrayField(
-        formData.hops as string[] | null | undefined,
-        formData.hops as unknown as string
-      ),
-      malts: handleArrayField(
-        formData.malts as string[] | null | undefined,
-        formData.malts as unknown as string
-      ),
-      yeast: handleArrayField(
-        formData.yeast as string[] | null | undefined,
-        formData.yeast as unknown as string
-      ),
-      others: handleArrayField(
-        formData.others as string[] | null | undefined,
-        formData.others as unknown as string
-      ),
-    };
-
-    const result = await updateBeer(updatedFormData, beer.id);
-
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      setSuccess(true);
-      router.push(`/beer/${beer.id}`);
+    } catch (uploadError: any) {
+      setError(`画像アップロードに失敗しました: ${uploadError.message}`);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -130,6 +186,25 @@ const UpdateBeerForm = ({ beer, breweries }: UpdateBeerFormProps) => {
       {error && <div className="text-red-500">{error}</div>}
       {success && <div className="text-green-500">更新しました！</div>}
       <div className="grid grid-cols-1 gap-2 mb-2">
+        <div className="grid justify-items-center">
+          {previewUrl ? (
+            <div>
+              <img
+                src={previewUrl}
+                alt={formData.name || 'No Name'}
+                className="w-72 rounded-lg aspect-square"
+              />
+            </div>
+          ) : (
+            <div>No Image</div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="file-input file-input-bordered file-input-primary w-full max-w-xs mt-4"
+          />
+        </div>
         <div className="form-control w-full">
           <label className="label">
             <span className="label-text">商品名</span>
