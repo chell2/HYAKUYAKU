@@ -53,20 +53,48 @@ const UpdateBeerForm = ({ beer, breweries }: UpdateBeerFormProps) => {
       newValue: string | string[] | null | undefined
     ) => {
       if (typeof newValue === 'string') {
-        if (/[、,]/.test(newValue)) {
-          return newValue.split(/、|,/).map((item) => item.trim());
-        } else if (newValue.trim() !== '') {
-          return [newValue.trim()];
+        const trimmedValue = newValue.trim();
+        if (/[、,]/.test(trimmedValue)) {
+          return trimmedValue
+            .split(/、|,/)
+            .map((item) => item.trim())
+            .filter((item) => item !== ''); // 空の要素を削除
+        } else if (trimmedValue !== '') {
+          return [trimmedValue];
         } else {
-          return []; // 空白のみの場合は空配列を返す
+          return null; // 空白の場合はnullを返す
         }
       } else {
         return existingValue; // 変更がない場合は元の値を返す
       }
     };
 
+    // 数値型フィールドの処理
+    const handleNumberField = (value: number | undefined | null) => {
+      if (value === undefined || value === null) {
+        return null;
+      }
+      const parsedValue = Number(value);
+      return isNaN(parsedValue) ? null : parsedValue;
+    };
+
+    // 文字列型フィールドの処理
+    const handleStringField = (value: string | null | undefined) => {
+      if (value === undefined || value === null || value === '') {
+        return null;
+      }
+      return value;
+    };
+
     const updatedFormData = {
       ...formData,
+      price: handleNumberField(formData.price),
+      ibu: handleNumberField(formData.ibu),
+      volume: handleNumberField(formData.volume),
+      style: handleStringField(formData.style),
+      abv: handleStringField(formData.abv),
+      fermentation: handleStringField(formData.fermentation),
+      status: handleStringField(formData.status),
       hops: handleArrayField(
         formData.hops as string[] | null | undefined,
         formData.hops as unknown as string
