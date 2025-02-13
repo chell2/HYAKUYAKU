@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import { Product, Brewery } from '@/types/types';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/utils/supabase/client';
+import { getImageUrl } from '@/lib/utils/getImageUrl';
 import UpdateDeleteButtons from '@/components/BeerUpdateDeleteButtons';
 import Loading from '@/app/loading';
 
@@ -133,19 +133,17 @@ export default function BeerDetailPage({ params }: { params: { id: string } }) {
           </div>
         </div>
         <div className="grid justify-items-center">
-          <Image
-            src={`/${beer?.id}.png`}
-            alt={`${beer?.name}` || 'No Name'}
-            width={250}
-            height={250}
-            style={{ borderRadius: '10px' }}
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = '/placeholder.png';
-            }}
-          />
+          {beer && (
+            <div>
+              <img
+                src={getImageUrl(beer.image_path)}
+                alt={beer.name || 'No Name'}
+                className="w-72 rounded-lg aspect-square"
+              />
+            </div>
+          )}
         </div>
-        <article className="prose mt-8">
+        <article className="prose mt-10">
           <p>{beer?.description}</p>
           <div className="divider divider-start mt-12">【商品情報】</div>
           <ul className="list-none">
