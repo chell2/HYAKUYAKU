@@ -15,8 +15,6 @@ const Card: React.FC<Props> = ({ data }) => {
     }
     return `${basePath}/${imagePath}`;
   };
-  console.log('data.image_path:', data.image_path);
-  console.log('Generated image URL:', getImageUrl(data.image_path));
 
   return (
     <div className="card bg-base-100 w-64 shadow-xl">
