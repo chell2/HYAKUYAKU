@@ -7,11 +7,11 @@ interface Props {
 
 const Card: React.FC<Props> = ({ data }) => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const basePath = `${supabaseUrl}/storage/v1/object/public/images`;
+  const basePath = `${supabaseUrl}/storage/v1/object/public/images/products`;
 
   const getImageUrl = (imagePath: string | null) => {
     if (!imagePath) {
-      return `${basePath}/products/placeholder.png`; // 画像がない場合はデフォルト画像
+      return `${basePath}/placeholder.png`; // 画像がない場合はデフォルト画像
     }
     return `${basePath}/${imagePath}`;
   };

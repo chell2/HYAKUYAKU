@@ -71,10 +71,10 @@ const BeerInsert = () => {
   };
 
   const uploadImage = async (file: File) => {
-    const filePath = `products/${Date.now()}-${file.name}`;
+    const filePath = `${Date.now()}-${file.name}`;
 
     const { data, error } = await supabase.storage
-      .from('images')
+      .from('images/products')
       .upload(filePath, file);
 
     if (error) {
