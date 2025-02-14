@@ -100,9 +100,12 @@ const UpdateBreweryForm = ({ brewery }: { brewery: Brewery }) => {
       } else {
         router.push(`/brewery/${brewery.id}`);
       }
-    } catch (error: any) {
-      setError(error.message || '画像のアップロードまたは更新に失敗しました');
-      console.error('Error in handleSubmit:', error);
+    } catch (uploadError) {
+      setError(
+        `画像アップロードまたは更新に失敗しました: ${
+          (uploadError as Error).message
+        }`
+      );
     } finally {
       setIsLoading(false);
     }

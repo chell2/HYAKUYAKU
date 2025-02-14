@@ -174,8 +174,8 @@ const UpdateBeerForm = ({ beer, breweries }: UpdateBeerFormProps) => {
         setSuccess(true);
         router.push(`/beer/${beer.id}`);
       }
-    } catch (uploadError: any) {
-      setError(`画像アップロードに失敗しました: ${uploadError.message}`);
+    } catch (uploadError) {
+      setError(`画像アップロードに失敗しました: ${(uploadError as Error).message}`);
     } finally {
       setIsLoading(false);
     }

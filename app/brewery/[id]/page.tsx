@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { Brewery } from '@/types/types';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/utils/supabase/client';
