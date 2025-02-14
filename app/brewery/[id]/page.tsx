@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Brewery } from '@/types/types';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/utils/supabase/client';
+import { getImageUrl } from '@/lib/utils/getImageUrl';
 import UpdateDeleteButtons from '@/components/UpdateDeleteButtons';
 import Loading from '@/app/loading';
 
@@ -85,18 +86,16 @@ export default function BreweryDetailPage({
       <main>
         <div className="w-full text-center mb-8 py-4">
           <div className="stats shadow">
-            <div className="stat">
-              <Image
-                src={`/${brewery?.id}.png`}
-                alt={brewery?.name || 'No Name'}
-                width={160}
-                height={160}
-                style={{ borderRadius: '10px' }}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/noimage.png';
-                }}
-              />
+            <div className="stat w-52">
+              {brewery && (
+                <figure>
+                  <img
+                    src={getImageUrl(brewery.image_path, 'breweries')}
+                    alt={brewery.name || 'No Name'}
+                    className="rounded-lg aspect-square object-contain"
+                  />
+                </figure>
+              )}
             </div>
             <div className="stat">
               <div className="stat-figure text-primary"></div>

@@ -15,6 +15,7 @@ export async function updateBrewery(formData: Brewery) {
       name: formData.name,
       region: formData.region,
       description: formData.description,
+      image_path: formData.image_path,
     })
     .eq('id', formData.id);
 

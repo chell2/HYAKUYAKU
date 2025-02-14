@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Brewery } from '@/types/types';
+import { getImageUrl } from '@/lib/utils/getImageUrl';
 
 interface Props {
   data: Brewery;
@@ -10,16 +11,9 @@ const BreweryCard: React.FC<Props> = ({ data }) => {
     <div className="card bg-base-100 w-64 shadow-xl">
       <figure className="w-auto aspect-square">
         <img
-          src={`/${data.id}.png`}
+          src={getImageUrl(data.image_path, 'breweries')}
           alt={data.name || 'No Name'}
-          onError={(
-            e: React.SyntheticEvent<HTMLImageElement> & {
-              currentTarget: HTMLImageElement;
-            }
-          ) => {
-            console.error('Error loading image:', `/${data.id}.png`, e);
-            e.currentTarget.src = '/noimage.png';
-          }}
+          className="aspect-square object-cover"
         />
       </figure>
       <div className="card-body prose">
