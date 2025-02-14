@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       breweries: {
         Row: {
+          image_path: string | null;
           created_at: string;
           deleted_at: string | null;
           description: string | null;
