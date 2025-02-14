@@ -5,19 +5,21 @@ import { createClient } from '@/lib/utils/supabase/server';
 export async function insertBreweryData(formData: FormData) {
   const supabase = await createClient();
 
-  const name = formData.get('name')?.toString();
-  const description = formData.get('description')?.toString();
-  const region = formData.get('region')?.toString();
+  const name = formData.get('name')?.toString() ?? '';
+  const description = formData.get('description')?.toString() ?? '';
+  const region = formData.get('region')?.toString() ?? '';
+  const image_path = formData.get('image_path')?.toString() ?? null;
 
-  if (!name || !description || !region) {
-    throw new Error('Name and description are required.');
+  if (!name || !region) {
+    throw new Error('名前と地域を入力してください');
   }
 
   const { error } = await supabase.from('breweries').insert([
     {
-      name: name || '',
-      description: description || '',
-      region: region || '',
+      name,
+      description,
+      region,
+      image_path: image_path || null,
     },
   ]);
 
